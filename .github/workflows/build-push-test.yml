@@ -40,6 +40,6 @@ jobs:
       with:
         serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
         packageName: com.denuafhaengige.duahandroid
-        releaseFiles: app/build/outputs/apk/release/*.apk
+        releaseFiles: app/release/*.aab
         track: production
         mappingFile: app/build/outputs/mapping/release/mapping.txt
