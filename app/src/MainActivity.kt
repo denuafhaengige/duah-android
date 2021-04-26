@@ -30,26 +30,36 @@ class MainActivity : ComponentActivity() {
 
     private val mediaControllerCallbacks = object: MediaController.ControllerCallback() {
 
+        override fun onConnected(
+            controller: MediaController,
+            allowedCommands: SessionCommandGroup
+        ) {
+            super.onConnected(controller, allowedCommands)
+            refreshPlayerState()
+        }
+
         override fun onPlayerStateChanged(controller: MediaController, state: Int) {
             super.onPlayerStateChanged(controller, state)
-            when (state) {
-                SessionPlayer.PLAYER_STATE_ERROR,
-                SessionPlayer.PLAYER_STATE_PAUSED,
-                SessionPlayer.PLAYER_STATE_IDLE ->
-                    appViewModel.onPlaybackStateChange(AppViewModel.PlaybackState.PAUSED)
-                SessionPlayer.PLAYER_STATE_PLAYING ->
-                    appViewModel.onPlaybackStateChange(AppViewModel.PlaybackState.PLAYING)
-            }
+            refreshPlayerState()
         }
     }
 
     // MARK: Life cycle
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        println("MainActivity.kt onCreate()")
+
         super.onCreate(savedInstanceState)
 
+        val sessionManager = MediaSessionManager.getInstance(this)
+        val tokens = sessionManager.sessionServiceTokens
+        println("MainActivity.kt onCreate() sessionServiceTokens: $tokens")
+
+        val sessionToken = SessionToken(this, ComponentName(this, RadioService::class.java))
+        println("MainActivity.kt onCreate() mediaToken: $sessionToken")
         mediaController = MediaController.Builder(this)
-            .setSessionToken(SessionToken(this, ComponentName(this, RadioService::class.java)))
+            .setSessionToken(sessionToken)
             .setControllerCallback(mainExecutor, mediaControllerCallbacks)
             .build()
         radioEndpoint = Uri.parse(getString(R.string.radio_endpoint))
@@ -63,9 +73,48 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    override fun onStart() {
+        println("MainActivity.kt onStart()")
+        super.onStart()
+    }
+
+    override fun onPause() {
+        println("MainActivity.kt onPause()")
+        super.onPause()
+    }
+
     override fun onStop() {
+        println("MainActivity.kt onStop()")
         super.onStop()
+    }
+
+    override fun onDestroy() {
+        println("MainActivity.kt onDestroy()")
+        super.onDestroy()
         mediaController.close()
+    }
+
+    // MARK: Logic
+
+    fun refreshPlayerState() {
+        when (mediaController.playerState) {
+            SessionPlayer.PLAYER_STATE_ERROR -> {
+                println("MainActivity refreshPlayerState(): mediaController.playerState: PLAYER_STATE_ERROR")
+                appViewModel.onPlaybackStateChange(AppViewModel.PlaybackState.PAUSED)
+            }
+            SessionPlayer.PLAYER_STATE_PAUSED -> {
+                println("MainActivity refreshPlayerState(): mediaController.playerState: PLAYER_STATE_PAUSED")
+                appViewModel.onPlaybackStateChange(AppViewModel.PlaybackState.PAUSED)
+            }
+            SessionPlayer.PLAYER_STATE_IDLE -> {
+                println("MainActivity refreshPlayerState(): mediaController.playerState: PLAYER_STATE_IDLE")
+                appViewModel.onPlaybackStateChange(AppViewModel.PlaybackState.PAUSED)
+            }
+            SessionPlayer.PLAYER_STATE_PLAYING -> {
+                println("MainActivity refreshPlayerState(): mediaController.playerState: PLAYER_STATE_PLAYING")
+                appViewModel.onPlaybackStateChange(AppViewModel.PlaybackState.PLAYING)
+            }
+        }
     }
 
 }
