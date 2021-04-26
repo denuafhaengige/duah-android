@@ -75,7 +75,6 @@ class RadioService: MediaSessionService() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         return super.onStartCommand(intent, flags, startId)
-        println("RadioService.kt onStartCommand() intent: $intent, flags: $flags, startId: $startId")
     }
 
 }
