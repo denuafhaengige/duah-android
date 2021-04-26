@@ -14,6 +14,7 @@ jobs:
       uses: actions/setup-java@v2
       with:
         java-version: 11
+        distribution: zulu
     - name: Build all artifacts
       id: buildAllApks
       uses: eskatos/gradle-command-action@v1.3.3
