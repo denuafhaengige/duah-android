@@ -11,8 +11,6 @@ android {
         applicationId "com.denuafhaengige.duahandroid"
         minSdk 28
         targetSdk 30
-        versionCode 5
-        versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         minSdkVersion 28
