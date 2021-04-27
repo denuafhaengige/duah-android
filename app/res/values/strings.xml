@@ -2,6 +2,6 @@
     <string name="app_name">Uafhængig</string>
     <string name="app_name_long">Den Uafhængige</string>
     <string name="title_activity_main">MainActivity</string>
-    <string name="radio_endpoint">https://radio.denuafhaengige.dk/test</string>
-    <!--    <string name="radio_endpoint">https://radio.denuafhaengige.dk/live</string>-->
+    <!--    <string name="radio_endpoint">https://radio.denuafhaengige.dk/test</string>-->
+    <string name="radio_endpoint">https://radio.denuafhaengige.dk/live</string>
     </resources>
