@@ -46,4 +46,3 @@ jobs:
         releaseFiles: app/build/outputs/apk/release/app-release-unsigned-signed.apk
         track: production
         mappingFile: app/build/outputs/mapping/release/mapping.txt
-        changesNotSentForReview: true
