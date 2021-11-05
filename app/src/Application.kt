@@ -1,6 +1,6 @@
-package dk.denuafhaengige.android
+package com.denuafhaengige.duahandroid
 import com.squareup.moshi.Moshi
-import dk.denuafhaengige.android.graph.MoshiFactory
+import com.denuafhaengige.duahandroid.graph.MoshiFactory
 import android.app.Application as AndroidApplication
 
 class Application: AndroidApplication() {

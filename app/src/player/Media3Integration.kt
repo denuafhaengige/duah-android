@@ -1,9 +1,9 @@
-package dk.denuafhaengige.android.player
+package com.denuafhaengige.duahandroid.player
 
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.Player
-import dk.denuafhaengige.android.util.Settings
+import com.denuafhaengige.duahandroid.util.Settings
 
 object Media3Integration {
 

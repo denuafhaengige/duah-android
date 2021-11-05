@@ -1,4 +1,4 @@
-package dk.denuafhaengige.android.theming
+package com.denuafhaengige.duahandroid.theming
 
 import androidx.compose.ui.graphics.Color
 

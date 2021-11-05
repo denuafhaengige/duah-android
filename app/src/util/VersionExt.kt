@@ -1,4 +1,4 @@
-package dk.denuafhaengige.android.util
+package com.denuafhaengige.duahandroid.util
 
 import io.github.g00fy2.versioncompare.Version
 

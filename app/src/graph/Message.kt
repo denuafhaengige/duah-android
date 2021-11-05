@@ -1,10 +1,10 @@
-package dk.denuafhaengige.android.graph
+package com.denuafhaengige.duahandroid.graph
 
 import com.google.common.graph.Graph
 import com.squareup.moshi.*
 
 import com.squareup.moshi.adapters.PolymorphicJsonAdapterFactory
-import dk.denuafhaengige.android.models.*
+import com.denuafhaengige.duahandroid.models.*
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 

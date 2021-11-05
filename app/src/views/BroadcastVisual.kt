@@ -1,4 +1,4 @@
-package dk.denuafhaengige.android.views
+package com.denuafhaengige.duahandroid.views
 
 import android.net.Uri
 import androidx.compose.foundation.Image
@@ -13,13 +13,13 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
-import dk.denuafhaengige.android.AppViewModel
-import dk.denuafhaengige.android.models.BroadcastWithProgramAndEmployees
-import dk.denuafhaengige.android.player.Playable
-import dk.denuafhaengige.android.player.PlayableFlow
-import dk.denuafhaengige.android.player.PlayerViewModel
-import dk.denuafhaengige.android.util.LivePlayable
-import dk.denuafhaengige.android.util.LivePlayableBroadcast
+import com.denuafhaengige.duahandroid.AppViewModel
+import com.denuafhaengige.duahandroid.models.BroadcastWithProgramAndEmployees
+import com.denuafhaengige.duahandroid.player.Playable
+import com.denuafhaengige.duahandroid.player.PlayableFlow
+import com.denuafhaengige.duahandroid.player.PlayerViewModel
+import com.denuafhaengige.duahandroid.util.LivePlayable
+import com.denuafhaengige.duahandroid.util.LivePlayableBroadcast
 
 enum class BroadcastVisualStyle {
     WIDE,

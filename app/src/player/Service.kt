@@ -1,4 +1,4 @@
-package dk.denuafhaengige.android.player
+package com.denuafhaengige.duahandroid.player
 
 import android.app.PendingIntent
 import android.content.Intent
@@ -15,9 +15,9 @@ import androidx.media3.session.MediaLibraryService
 import androidx.media3.session.MediaSession
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
-import dk.denuafhaengige.android.util.Log
-import dk.denuafhaengige.android.content.ContentService
-import dk.denuafhaengige.android.util.Settings
+import com.denuafhaengige.duahandroid.util.Log
+import com.denuafhaengige.duahandroid.content.ContentService
+import com.denuafhaengige.duahandroid.util.Settings
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first

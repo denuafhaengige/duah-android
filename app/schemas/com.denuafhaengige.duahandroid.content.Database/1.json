@@ -1,0 +1,554 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "6c03a0797af0e0436d43ac7ba3defb0d",
+    "entities": [
+      {
+        "tableName": "Broadcast",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `season` INTEGER, `number` INTEGER, `title` TEXT NOT NULL, `broadcasted` INTEGER, `description` TEXT, `hidden` INTEGER NOT NULL, `duration` INTEGER, `program_id` INTEGER, `square_image_file_url` TEXT, `square_image_file_mime_type` TEXT, `square_image_file_type` TEXT, `square_image_file_path` TEXT, `wide_image_file_url` TEXT, `wide_image_file_mime_type` TEXT, `wide_image_file_type` TEXT, `wide_image_file_path` TEXT, `vod_segmented_folder_url` TEXT, `vod_segmented_folder_mime_type` TEXT, `vod_segmented_folder_type` TEXT, `vod_segmented_folder_path` TEXT, `vod_single_file_folder_url` TEXT, `vod_single_file_folder_mime_type` TEXT, `vod_single_file_folder_type` TEXT, `vod_single_file_folder_path` TEXT, `vod_direct_file_url` TEXT, `vod_direct_file_mime_type` TEXT, `vod_direct_file_type` TEXT, `vod_direct_file_path` TEXT, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "season",
+            "columnName": "season",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "number",
+            "columnName": "number",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "broadcasted",
+            "columnName": "broadcasted",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "description",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "hidden",
+            "columnName": "hidden",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "duration",
+            "columnName": "duration",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "programReference",
+            "columnName": "program_id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "squareImageFile.url",
+            "columnName": "square_image_file_url",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "squareImageFile.mimeType",
+            "columnName": "square_image_file_mime_type",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "squareImageFile.type",
+            "columnName": "square_image_file_type",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "squareImageFile.path",
+            "columnName": "square_image_file_path",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "wideImageFile.url",
+            "columnName": "wide_image_file_url",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "wideImageFile.mimeType",
+            "columnName": "wide_image_file_mime_type",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "wideImageFile.type",
+            "columnName": "wide_image_file_type",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "wideImageFile.path",
+            "columnName": "wide_image_file_path",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "vodSegmentedFolder.url",
+            "columnName": "vod_segmented_folder_url",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "vodSegmentedFolder.mimeType",
+            "columnName": "vod_segmented_folder_mime_type",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "vodSegmentedFolder.type",
+            "columnName": "vod_segmented_folder_type",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "vodSegmentedFolder.path",
+            "columnName": "vod_segmented_folder_path",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "vodSingleFileFolder.url",
+            "columnName": "vod_single_file_folder_url",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "vodSingleFileFolder.mimeType",
+            "columnName": "vod_single_file_folder_mime_type",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "vodSingleFileFolder.type",
+            "columnName": "vod_single_file_folder_type",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "vodSingleFileFolder.path",
+            "columnName": "vod_single_file_folder_path",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "vodDirectFile.url",
+            "columnName": "vod_direct_file_url",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "vodDirectFile.mimeType",
+            "columnName": "vod_direct_file_mime_type",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "vodDirectFile.type",
+            "columnName": "vod_direct_file_type",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "vodDirectFile.path",
+            "columnName": "vod_direct_file_path",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "Channel",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `identifier` TEXT NOT NULL, `title` TEXT NOT NULL, `hidden` INTEGER NOT NULL, `is_broadcasting` INTEGER NOT NULL, `current_broadcast_id` INTEGER, `square_image_file_url` TEXT, `square_image_file_mime_type` TEXT, `square_image_file_type` TEXT, `square_image_file_path` TEXT, `wide_image_file_url` TEXT, `wide_image_file_mime_type` TEXT, `wide_image_file_type` TEXT, `wide_image_file_path` TEXT, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "identifier",
+            "columnName": "identifier",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "hidden",
+            "columnName": "hidden",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isBroadcasting",
+            "columnName": "is_broadcasting",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "currentBroadcastReference",
+            "columnName": "current_broadcast_id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "squareImageFile.url",
+            "columnName": "square_image_file_url",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "squareImageFile.mimeType",
+            "columnName": "square_image_file_mime_type",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "squareImageFile.type",
+            "columnName": "square_image_file_type",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "squareImageFile.path",
+            "columnName": "square_image_file_path",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "wideImageFile.url",
+            "columnName": "wide_image_file_url",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "wideImageFile.mimeType",
+            "columnName": "wide_image_file_mime_type",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "wideImageFile.type",
+            "columnName": "wide_image_file_type",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "wideImageFile.path",
+            "columnName": "wide_image_file_path",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "Employee",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `type` TEXT NOT NULL, `first_name` TEXT NOT NULL, `last_name` TEXT NOT NULL, `email` TEXT, `title` TEXT, `description` TEXT, `sort` INTEGER, `hidden` INTEGER NOT NULL, `photo_file_url` TEXT, `photo_file_mime_type` TEXT, `photo_file_type` TEXT, `photo_file_path` TEXT, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "type",
+            "columnName": "type",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "firstName",
+            "columnName": "first_name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lastName",
+            "columnName": "last_name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "email",
+            "columnName": "email",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "description",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "sort",
+            "columnName": "sort",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "hidden",
+            "columnName": "hidden",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "photoFile.url",
+            "columnName": "photo_file_url",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "photoFile.mimeType",
+            "columnName": "photo_file_mime_type",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "photoFile.type",
+            "columnName": "photo_file_type",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "photoFile.path",
+            "columnName": "photo_file_path",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "Program",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `title` TEXT NOT NULL, `description` TEXT, `hidden` INTEGER NOT NULL, `square_image_file_url` TEXT, `square_image_file_mime_type` TEXT, `square_image_file_type` TEXT, `square_image_file_path` TEXT, `wide_image_file_url` TEXT, `wide_image_file_mime_type` TEXT, `wide_image_file_type` TEXT, `wide_image_file_path` TEXT, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "description",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "hidden",
+            "columnName": "hidden",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "squareImageFile.url",
+            "columnName": "square_image_file_url",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "squareImageFile.mimeType",
+            "columnName": "square_image_file_mime_type",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "squareImageFile.type",
+            "columnName": "square_image_file_type",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "squareImageFile.path",
+            "columnName": "square_image_file_path",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "wideImageFile.url",
+            "columnName": "wide_image_file_url",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "wideImageFile.mimeType",
+            "columnName": "wide_image_file_mime_type",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "wideImageFile.type",
+            "columnName": "wide_image_file_type",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "wideImageFile.path",
+            "columnName": "wide_image_file_path",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "Setting",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `identifier` TEXT NOT NULL, `value` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "identifier",
+            "columnName": "identifier",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "value",
+            "columnName": "value",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "BroadcastEmployeeCrossRef",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`broadcast_id` INTEGER NOT NULL, `employee_id` INTEGER NOT NULL, PRIMARY KEY(`broadcast_id`, `employee_id`))",
+        "fields": [
+          {
+            "fieldPath": "broadcastReference",
+            "columnName": "broadcast_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "employeeReference",
+            "columnName": "employee_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "broadcast_id",
+            "employee_id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [
+          {
+            "name": "index_BroadcastEmployeeCrossRef_broadcast_id",
+            "unique": false,
+            "columnNames": [
+              "broadcast_id"
+            ],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_BroadcastEmployeeCrossRef_broadcast_id` ON `${TABLE_NAME}` (`broadcast_id`)"
+          },
+          {
+            "name": "index_BroadcastEmployeeCrossRef_employee_id",
+            "unique": false,
+            "columnNames": [
+              "employee_id"
+            ],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_BroadcastEmployeeCrossRef_employee_id` ON `${TABLE_NAME}` (`employee_id`)"
+          }
+        ],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '6c03a0797af0e0436d43ac7ba3defb0d')"
+    ]
+  }
+}

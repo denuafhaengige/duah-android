@@ -1,4 +1,4 @@
-package dk.denuafhaengige.android.views
+package com.denuafhaengige.duahandroid.views
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.*
@@ -19,9 +19,9 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.google.accompanist.insets.navigationBarsPadding
-import dk.denuafhaengige.android.AppState
-import dk.denuafhaengige.android.AppViewModel
-import dk.denuafhaengige.android.R
+import com.denuafhaengige.duahandroid.AppState
+import com.denuafhaengige.duahandroid.AppViewModel
+import com.denuafhaengige.duahandroid.R
 import java.text.DecimalFormat
 import kotlin.math.round
 

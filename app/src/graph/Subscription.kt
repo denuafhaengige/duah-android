@@ -1,9 +1,9 @@
-package dk.denuafhaengige.android.graph
+package com.denuafhaengige.duahandroid.graph
 
-import dk.denuafhaengige.android.models.Entity
-import dk.denuafhaengige.android.models.EntityMetaData
-import dk.denuafhaengige.android.models.EntityType
-import dk.denuafhaengige.android.models.JsonEntityType
+import com.denuafhaengige.duahandroid.models.Entity
+import com.denuafhaengige.duahandroid.models.EntityMetaData
+import com.denuafhaengige.duahandroid.models.EntityType
+import com.denuafhaengige.duahandroid.models.JsonEntityType
 import com.squareup.moshi.*
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type

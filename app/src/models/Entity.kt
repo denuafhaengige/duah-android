@@ -1,4 +1,4 @@
-package dk.denuafhaengige.android.models
+package com.denuafhaengige.duahandroid.models
 
 import com.google.common.reflect.TypeToken
 import com.squareup.moshi.*

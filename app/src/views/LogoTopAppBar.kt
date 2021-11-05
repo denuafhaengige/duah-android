@@ -1,4 +1,4 @@
-package dk.denuafhaengige.android.views
+package com.denuafhaengige.duahandroid.views
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -21,12 +21,12 @@ import androidx.compose.ui.zIndex
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.accompanist.insets.navigationBarsHeight
 import com.google.accompanist.insets.statusBarsHeight
-import dk.denuafhaengige.android.AppViewModel
-import dk.denuafhaengige.android.R
-import dk.denuafhaengige.android.models.ChannelWithCurrentBroadcast
-import dk.denuafhaengige.android.player.Playable
-import dk.denuafhaengige.android.player.PlayerViewModel
-import dk.denuafhaengige.android.util.LiveEntity
+import com.denuafhaengige.duahandroid.AppViewModel
+import com.denuafhaengige.duahandroid.R
+import com.denuafhaengige.duahandroid.models.ChannelWithCurrentBroadcast
+import com.denuafhaengige.duahandroid.player.Playable
+import com.denuafhaengige.duahandroid.player.PlayerViewModel
+import com.denuafhaengige.duahandroid.util.LiveEntity
 
 data class LogoTopAppBarModel(
     val playerViewModel: PlayerViewModel,

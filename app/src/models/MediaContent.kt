@@ -1,4 +1,4 @@
-package dk.denuafhaengige.android.models
+package com.denuafhaengige.duahandroid.models
 
 import android.net.Uri
 

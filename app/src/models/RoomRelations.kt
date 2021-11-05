@@ -1,4 +1,4 @@
-package dk.denuafhaengige.android.models
+package com.denuafhaengige.duahandroid.models
 
 import androidx.room.*
 import androidx.room.Entity

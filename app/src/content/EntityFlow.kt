@@ -1,6 +1,6 @@
-package dk.denuafhaengige.android.content
+package com.denuafhaengige.duahandroid.content
 
-import dk.denuafhaengige.android.models.Entity
+import com.denuafhaengige.duahandroid.models.Entity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview

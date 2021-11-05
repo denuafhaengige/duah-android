@@ -1,10 +1,10 @@
-package dk.denuafhaengige.android.models
+package com.denuafhaengige.duahandroid.models
 
 import android.net.Uri
 import androidx.room.*
 import com.squareup.moshi.Json
-import dk.denuafhaengige.android.content.ContentStore
-import dk.denuafhaengige.android.content.EntityFlow
+import com.denuafhaengige.duahandroid.content.ContentStore
+import com.denuafhaengige.duahandroid.content.EntityFlow
 import java.util.*
 import kotlin.random.Random
 

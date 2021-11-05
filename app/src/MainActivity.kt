@@ -1,4 +1,4 @@
-package dk.denuafhaengige.android
+package com.denuafhaengige.duahandroid
 
 import android.content.*
 import android.os.Bundle
@@ -6,12 +6,12 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.ViewModelProvider
-import dk.denuafhaengige.android.player.*
-import dk.denuafhaengige.android.content.ContentService
-import dk.denuafhaengige.android.theming.DuahTheme
-import dk.denuafhaengige.android.util.Log
-import dk.denuafhaengige.android.util.Settings
-import dk.denuafhaengige.android.views.App
+import com.denuafhaengige.duahandroid.player.*
+import com.denuafhaengige.duahandroid.content.ContentService
+import com.denuafhaengige.duahandroid.theming.DuahTheme
+import com.denuafhaengige.duahandroid.util.Log
+import com.denuafhaengige.duahandroid.util.Settings
+import com.denuafhaengige.duahandroid.views.App
 
 class MainActivity : ComponentActivity() {
 

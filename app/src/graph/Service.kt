@@ -1,7 +1,7 @@
-package dk.denuafhaengige.android.graph
+package com.denuafhaengige.duahandroid.graph
 
 import android.net.Uri
-import dk.denuafhaengige.android.models.*
+import com.denuafhaengige.duahandroid.models.*
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.adapters.Rfc3339DateJsonAdapter
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory

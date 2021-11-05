@@ -1,4 +1,4 @@
-package dk.denuafhaengige.android.views
+package com.denuafhaengige.duahandroid.views
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -23,11 +23,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import dk.denuafhaengige.android.player.Playable
-import dk.denuafhaengige.android.player.PlayerViewModel
-import dk.denuafhaengige.android.theming.RedColor
-import dk.denuafhaengige.android.util.DurationFormatter
-import dk.denuafhaengige.android.util.LivePlayable
+import com.denuafhaengige.duahandroid.player.Playable
+import com.denuafhaengige.duahandroid.player.PlayerViewModel
+import com.denuafhaengige.duahandroid.theming.RedColor
+import com.denuafhaengige.duahandroid.util.DurationFormatter
+import com.denuafhaengige.duahandroid.util.LivePlayable
 
 data class TinyPlayerModel(
     val playerViewModel: PlayerViewModel,

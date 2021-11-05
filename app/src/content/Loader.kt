@@ -1,10 +1,10 @@
-package dk.denuafhaengige.android.content
+package com.denuafhaengige.duahandroid.content
 
 import android.net.Uri
-import dk.denuafhaengige.android.graph.*
-import dk.denuafhaengige.android.models.*
-import dk.denuafhaengige.android.util.Log
-import dk.denuafhaengige.android.util.Settings
+import com.denuafhaengige.duahandroid.graph.*
+import com.denuafhaengige.duahandroid.models.*
+import com.denuafhaengige.duahandroid.util.Log
+import com.denuafhaengige.duahandroid.util.Settings
 import com.google.common.reflect.TypeToken
 import com.squareup.moshi.Moshi
 import com.tinder.scarlet.*

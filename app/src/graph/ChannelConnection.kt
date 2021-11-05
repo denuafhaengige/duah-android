@@ -1,4 +1,4 @@
-package dk.denuafhaengige.android.graph
+package com.denuafhaengige.duahandroid.graph
 
 data class GraphChannelConnectionRequest(
     override var queryArgs: QueryArgs? = null,

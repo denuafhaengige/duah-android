@@ -1,7 +1,7 @@
-package dk.denuafhaengige.android.content
+package com.denuafhaengige.duahandroid.content
 
-import dk.denuafhaengige.android.models.*
-import dk.denuafhaengige.android.player.Playable
+import com.denuafhaengige.duahandroid.models.*
+import com.denuafhaengige.duahandroid.player.Playable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
-import dk.denuafhaengige.android.models.Program as ProgramEntity
+import com.denuafhaengige.duahandroid.models.Program as ProgramEntity
 
 class FeaturedFlow(featured: Featured, store: ContentStore) {
 

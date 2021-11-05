@@ -1,7 +1,7 @@
-package dk.denuafhaengige.android.graph
+package com.denuafhaengige.duahandroid.graph
 
-import dk.denuafhaengige.android.models.*
-import dk.denuafhaengige.android.util.Log
+import com.denuafhaengige.duahandroid.models.*
+import com.denuafhaengige.duahandroid.util.Log
 import com.squareup.moshi.*
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type

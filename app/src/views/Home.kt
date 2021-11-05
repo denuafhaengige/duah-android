@@ -1,4 +1,4 @@
-package dk.denuafhaengige.android.views
+package com.denuafhaengige.duahandroid.views
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.statusBarsHeight
 import com.google.accompanist.pager.ExperimentalPagerApi
-import dk.denuafhaengige.android.AppViewModel
+import com.denuafhaengige.duahandroid.AppViewModel
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable

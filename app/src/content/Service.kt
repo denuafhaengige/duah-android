@@ -1,4 +1,4 @@
-package dk.denuafhaengige.android.content
+package com.denuafhaengige.duahandroid.content
 
 import android.app.Service
 import android.content.Intent
@@ -6,12 +6,12 @@ import android.os.IBinder
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
-import dk.denuafhaengige.android.Application
-import dk.denuafhaengige.android.content.ContentLoaderStateAdapter.Companion.asServiceState
-import dk.denuafhaengige.android.models.*
-import dk.denuafhaengige.android.player.Playable
-import dk.denuafhaengige.android.util.Log
-import dk.denuafhaengige.android.util.Settings
+import com.denuafhaengige.duahandroid.Application
+import com.denuafhaengige.duahandroid.content.ContentLoaderStateAdapter.Companion.asServiceState
+import com.denuafhaengige.duahandroid.models.*
+import com.denuafhaengige.duahandroid.player.Playable
+import com.denuafhaengige.duahandroid.util.Log
+import com.denuafhaengige.duahandroid.util.Settings
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import java.util.*

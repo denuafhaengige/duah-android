@@ -1,4 +1,4 @@
-package dk.denuafhaengige.android.views
+package com.denuafhaengige.duahandroid.views
 
 import android.net.Uri
 import androidx.compose.foundation.BorderStroke
@@ -15,7 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
-import dk.denuafhaengige.android.models.Employee
+import com.denuafhaengige.duahandroid.models.Employee
 
 @Composable
 fun CircleImage(uri: Uri, diameter: Dp, borderColor: Color, modifier: Modifier? = null) {

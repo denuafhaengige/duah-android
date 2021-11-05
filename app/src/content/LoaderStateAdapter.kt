@@ -1,4 +1,4 @@
-package dk.denuafhaengige.android.content
+package com.denuafhaengige.duahandroid.content
 
 class ContentLoaderStateAdapter {
 

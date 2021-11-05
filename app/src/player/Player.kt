@@ -1,4 +1,4 @@
-package dk.denuafhaengige.android.player
+package com.denuafhaengige.duahandroid.player
 
 import android.content.ComponentName
 import android.content.Context
@@ -10,9 +10,9 @@ import androidx.media3.common.Timeline
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
-import dk.denuafhaengige.android.content.ContentService
-import dk.denuafhaengige.android.util.Log
-import dk.denuafhaengige.android.util.Settings
+import com.denuafhaengige.duahandroid.content.ContentService
+import com.denuafhaengige.duahandroid.util.Log
+import com.denuafhaengige.duahandroid.util.Settings
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.guava.await

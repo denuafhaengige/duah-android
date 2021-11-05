@@ -1,4 +1,4 @@
-package dk.denuafhaengige.android.player
+package com.denuafhaengige.duahandroid.player
 
 import android.net.Uri
 

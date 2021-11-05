@@ -1,13 +1,13 @@
-package dk.denuafhaengige.android.content
+package com.denuafhaengige.duahandroid.content
 
 import android.content.Context
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import dk.denuafhaengige.android.graph.GraphConnectionEdge
-import dk.denuafhaengige.android.models.*
-import dk.denuafhaengige.android.util.Log
-import dk.denuafhaengige.android.util.Settings
+import com.denuafhaengige.duahandroid.graph.GraphConnectionEdge
+import com.denuafhaengige.duahandroid.models.*
+import com.denuafhaengige.duahandroid.util.Log
+import com.denuafhaengige.duahandroid.util.Settings
 import com.google.common.reflect.TypeToken
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

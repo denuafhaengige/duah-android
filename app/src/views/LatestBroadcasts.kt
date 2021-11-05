@@ -1,4 +1,4 @@
-package dk.denuafhaengige.android.views
+package com.denuafhaengige.duahandroid.views
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
@@ -17,14 +17,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.unit.dp
-import dk.denuafhaengige.android.AppViewModel
-import dk.denuafhaengige.android.R
-import dk.denuafhaengige.android.models.Broadcast
-import dk.denuafhaengige.android.models.BroadcastWithProgramAndEmployees
-import dk.denuafhaengige.android.player.PlayerViewModel
-import dk.denuafhaengige.android.util.LiveEntity
-import dk.denuafhaengige.android.util.LivePlayableBroadcast
-import dk.denuafhaengige.android.util.capitalizeWords
+import com.denuafhaengige.duahandroid.AppViewModel
+import com.denuafhaengige.duahandroid.R
+import com.denuafhaengige.duahandroid.models.Broadcast
+import com.denuafhaengige.duahandroid.models.BroadcastWithProgramAndEmployees
+import com.denuafhaengige.duahandroid.player.PlayerViewModel
+import com.denuafhaengige.duahandroid.util.LiveEntity
+import com.denuafhaengige.duahandroid.util.LivePlayableBroadcast
+import com.denuafhaengige.duahandroid.util.capitalizeWords
 
 @Composable
 fun LatestBroadcasts(

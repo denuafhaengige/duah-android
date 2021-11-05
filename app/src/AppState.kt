@@ -1,8 +1,8 @@
-package dk.denuafhaengige.android
+package com.denuafhaengige.duahandroid
 
 import android.content.Context
-import dk.denuafhaengige.android.content.ContentService
-import dk.denuafhaengige.android.models.EntityType
+import com.denuafhaengige.duahandroid.content.ContentService
+import com.denuafhaengige.duahandroid.models.EntityType
 
 sealed class AppState {
 

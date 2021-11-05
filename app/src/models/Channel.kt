@@ -1,10 +1,10 @@
-package dk.denuafhaengige.android.models
+package com.denuafhaengige.duahandroid.models
 
 import android.net.Uri
 import com.squareup.moshi.Json
 import androidx.room.*
-import dk.denuafhaengige.android.content.ContentStore
-import dk.denuafhaengige.android.content.EntityFlow
+import com.denuafhaengige.duahandroid.content.ContentStore
+import com.denuafhaengige.duahandroid.content.EntityFlow
 
 @androidx.room.Entity
 data class Channel(

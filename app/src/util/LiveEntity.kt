@@ -1,9 +1,9 @@
-package dk.denuafhaengige.android.util
+package com.denuafhaengige.duahandroid.util
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import dk.denuafhaengige.android.content.EntityFlow
-import dk.denuafhaengige.android.models.Entity
+import com.denuafhaengige.duahandroid.content.EntityFlow
+import com.denuafhaengige.duahandroid.models.Entity
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch

@@ -1,4 +1,4 @@
-package dk.denuafhaengige.android.views
+package com.denuafhaengige.duahandroid.views
 
 import android.net.Uri
 import androidx.compose.foundation.background
@@ -24,12 +24,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import dk.denuafhaengige.android.models.Employee
-import dk.denuafhaengige.android.player.Playable
-import dk.denuafhaengige.android.player.Player
-import dk.denuafhaengige.android.player.PlayerViewModel
-import dk.denuafhaengige.android.theming.RedColor
-import dk.denuafhaengige.android.util.LivePlayable
+import com.denuafhaengige.duahandroid.models.Employee
+import com.denuafhaengige.duahandroid.player.Playable
+import com.denuafhaengige.duahandroid.player.Player
+import com.denuafhaengige.duahandroid.player.PlayerViewModel
+import com.denuafhaengige.duahandroid.theming.RedColor
+import com.denuafhaengige.duahandroid.util.LivePlayable
 
 enum class PlaybackButtonStyle {
     PLAIN,

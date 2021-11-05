@@ -1,4 +1,4 @@
-package dk.denuafhaengige.android.views
+package com.denuafhaengige.duahandroid.views
 
 import android.net.Uri
 import androidx.compose.foundation.Image
@@ -24,14 +24,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import com.google.accompanist.pager.*
-import dk.denuafhaengige.android.AppViewModel
-import dk.denuafhaengige.android.content.Featured
-import dk.denuafhaengige.android.models.BroadcastWithProgramAndEmployees
-import dk.denuafhaengige.android.R
-import dk.denuafhaengige.android.player.Playable
-import dk.denuafhaengige.android.player.PlayerViewModel
-import dk.denuafhaengige.android.util.LiveFeatured
-import dk.denuafhaengige.android.util.capitalizeWords
+import com.denuafhaengige.duahandroid.AppViewModel
+import com.denuafhaengige.duahandroid.content.Featured
+import com.denuafhaengige.duahandroid.models.BroadcastWithProgramAndEmployees
+import com.denuafhaengige.duahandroid.R
+import com.denuafhaengige.duahandroid.player.Playable
+import com.denuafhaengige.duahandroid.player.PlayerViewModel
+import com.denuafhaengige.duahandroid.util.LiveFeatured
+import com.denuafhaengige.duahandroid.util.capitalizeWords
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable

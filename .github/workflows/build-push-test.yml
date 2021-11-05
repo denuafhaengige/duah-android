@@ -42,7 +42,7 @@ jobs:
       uses: r0adkll/upload-google-play@v1
       with:
         serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
-        packageName: dk.denuafhaengige.android
+        packageName: com.denuafhaengige.duahandroid
         releaseFiles: app/build/outputs/apk/release/app-release-unsigned-signed.apk
         track: production
         mappingFile: app/build/outputs/mapping/release/mapping.txt

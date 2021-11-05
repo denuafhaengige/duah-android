@@ -1,4 +1,4 @@
-package dk.denuafhaengige.android.util
+package com.denuafhaengige.duahandroid.util
 
 import kotlin.math.floor
 

@@ -1,4 +1,4 @@
-package dk.denuafhaengige.android.views
+package com.denuafhaengige.duahandroid.views
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.material.*
@@ -9,8 +9,8 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.graphics.Color
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import dk.denuafhaengige.android.AppState
-import dk.denuafhaengige.android.AppViewModel
+import com.denuafhaengige.duahandroid.AppState
+import com.denuafhaengige.duahandroid.AppViewModel
 
 @Composable
 fun App(viewModel: AppViewModel) {

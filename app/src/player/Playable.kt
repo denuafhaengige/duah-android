@@ -1,16 +1,16 @@
-package dk.denuafhaengige.android.player
+package com.denuafhaengige.duahandroid.player
 
 import android.net.Uri
-import dk.denuafhaengige.android.content.ContentStore
-import dk.denuafhaengige.android.content.EntityFlow
-import dk.denuafhaengige.android.models.*
-import dk.denuafhaengige.android.util.Settings
+import com.denuafhaengige.duahandroid.content.ContentStore
+import com.denuafhaengige.duahandroid.content.EntityFlow
+import com.denuafhaengige.duahandroid.models.*
+import com.denuafhaengige.duahandroid.util.Settings
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import dk.denuafhaengige.android.models.ChannelWithCurrentBroadcast as ChannelModel
-import dk.denuafhaengige.android.models.BroadcastWithProgramAndEmployees as BroadcastModel
+import com.denuafhaengige.duahandroid.models.ChannelWithCurrentBroadcast as ChannelModel
+import com.denuafhaengige.duahandroid.models.BroadcastWithProgramAndEmployees as BroadcastModel
 
 class PlayableBroadcastFlow(playable: Playable.Broadcast, store: ContentStore) {
     private val playableFlow = PlayableFlow(playable, store)

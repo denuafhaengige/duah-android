@@ -1,10 +1,10 @@
-package dk.denuafhaengige.android.util
+package com.denuafhaengige.duahandroid.util
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import dk.denuafhaengige.android.player.Playable
-import dk.denuafhaengige.android.player.PlayableBroadcastFlow
-import dk.denuafhaengige.android.player.PlayableFlow
+import com.denuafhaengige.duahandroid.player.Playable
+import com.denuafhaengige.duahandroid.player.PlayableBroadcastFlow
+import com.denuafhaengige.duahandroid.player.PlayableFlow
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch

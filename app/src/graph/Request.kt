@@ -1,4 +1,4 @@
-package dk.denuafhaengige.android.graph
+package com.denuafhaengige.duahandroid.graph
 
 import java.util.*
 
