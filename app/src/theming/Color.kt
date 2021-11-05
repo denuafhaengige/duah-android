@@ -1,8 +1,7 @@
-package com.denuafhaengige.duahandroid.ui.theme
+package dk.denuafhaengige.android.theming
 
 import androidx.compose.ui.graphics.Color
 
-val Blue200 = Color(0xFF6D9BE0)
-val Blue500 = Color(0xFF0050D6)
-val Blue700 = Color(0xFF00256F)
-val BlueGrey200 = Color(0xFF5C80AD)
+val VeryLightGrey = Color(color = 0xFFF3F3F3)
+val VeryDarkGrey = Color(color = 0xFF1D1D1D)
+val RedColor = Color(color = 0xFFBE3D3D)

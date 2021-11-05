@@ -1,19 +1,26 @@
 plugins {
     id "com.android.application"
     id "kotlin-android"
+    id "kotlin-kapt"
 }
 
 android {
-    compileSdk 28
+    compileSdk 31
     buildToolsVersion "30.0.3"
 
     defaultConfig {
-        applicationId "com.denuafhaengige.duahandroid"
+        applicationId "dk.denuafhaengige.android"
         minSdk 28
         targetSdk 30
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         minSdkVersion 28
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += ["room.schemaLocation": "$projectDir/schemas".toString()]
+            }
+        }
     }
 
     sourceSets {
@@ -41,37 +48,29 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
         useIR = true
+        freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
     }
     composeOptions {
-        kotlinCompilerExtensionVersion "1.0.0-beta03"
-        kotlinCompilerVersion "1.4.31"
+        kotlinCompilerExtensionVersion "1.0.1"
     }
 }
 
 dependencies {
 
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
-    def media2_version = "1.1.2"
-    def compose_ui_version = "1.0.0-beta03"
-    def exoplayer_version = "2.13.3"
+    def compose_ui_version = "1.0.4"
+    def room_version = "2.3.0"
+    def accompanist_version = "0.18.0"
+    def coil_version = "1.3.2"
+    def media3_version = "1.0.0-alpha01"
 
-    implementation "androidx.core:core-ktx:1.3.2"
-    implementation "androidx.appcompat:appcompat:1.2.0"
-    implementation "com.google.android.material:material:1.3.0"
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.3.1"
+    implementation "androidx.core:core-ktx:1.7.0"
+    implementation "androidx.appcompat:appcompat:1.3.1"
+    implementation "com.google.android.material:material:1.4.0"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.4.0"
     testImplementation "junit:junit:4.13.2"
-    androidTestImplementation "androidx.test.ext:junit:1.1.2"
-    androidTestImplementation "androidx.test.espresso:espresso-core:3.3.0"
-
-    implementation "com.google.android.exoplayer:exoplayer:$exoplayer_version"
-    implementation "com.google.android.exoplayer:extension-media2:$exoplayer_version"
-
-    // Interacting with MediaSessions
-    implementation "androidx.media2:media2-session:$media2_version"
-    // optional - UI widgets for VideoView and MediaControlView
-    implementation "androidx.media2:media2-widget:$media2_version"
-    // optional - Implementation of a SessionPlayer
-    implementation "androidx.media2:media2-player:$media2_version"
+    androidTestImplementation "androidx.test.ext:junit:1.1.3"
+    androidTestImplementation "androidx.test.espresso:espresso-core:3.4.0"
 
     implementation "com.michael-bull.kotlin-result:kotlin-result:1.1.11"
     implementation "com.michael-bull.kotlin-result:kotlin-result-coroutines:1.1.11"
@@ -79,9 +78,10 @@ dependencies {
     // TODO: Remove when Compose UI beta 4 is out
     implementation "org.jetbrains.kotlinx:kotlinx-collections-immutable-jvm:0.3.4"
 
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.3"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.3"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.4.3"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.5.2"
 
     implementation "androidx.compose.ui:ui:$compose_ui_version"
     // Tooling support (Previews, etc.)
@@ -94,13 +94,71 @@ dependencies {
     implementation "androidx.compose.material:material-icons-core:$compose_ui_version"
     implementation "androidx.compose.material:material-icons-extended:$compose_ui_version"
     // Integration with activities
-    implementation "androidx.activity:activity-compose:1.3.0-alpha05"
+    implementation "androidx.activity:activity-compose:1.4.0"
     // Integration with ViewModels
-    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha03"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.4.0"
     // Integration with observables
     implementation "androidx.compose.runtime:runtime-livedata:$compose_ui_version"
     implementation "androidx.compose.runtime:runtime-rxjava2:$compose_ui_version"
 
     // UI Tests
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_ui_version"
+
+    // Scarlet, Moshi
+    implementation "com.tinder.scarlet:scarlet:0.1.12"
+    implementation "com.tinder.scarlet:message-adapter-moshi:0.1.12"
+    implementation "com.tinder.scarlet:stream-adapter-rxjava2:0.1.12"
+    implementation "com.tinder.scarlet:websocket-okhttp:0.1.12"
+    implementation "com.squareup.moshi:moshi-kotlin:1.12.0"
+    implementation "com.squareup.okhttp3:okhttp:4.9.1"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:1.5.21"
+    implementation "com.squareup.moshi:moshi-adapters:1.12.0"
+    kapt "com.squareup.moshi:moshi-kotlin-codegen:1.12.0"
+    implementation "dev.zacsweers.moshix:moshi-adapters:0.14.0"
+
+    // Room
+    implementation "androidx.room:room-runtime:$room_version"
+    annotationProcessor "androidx.room:room-compiler:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+    implementation "androidx.room:room-ktx:$room_version"
+    implementation "androidx.room:room-rxjava2:$room_version"
+    implementation "androidx.room:room-rxjava3:$room_version"
+    implementation "androidx.room:room-guava:$room_version"
+    testImplementation "androidx.room:room-testing:$room_version"
+    implementation "androidx.room:room-paging:2.4.0-beta01"
+
+    // DataStore
+    implementation "androidx.datastore:datastore-preferences:1.0.0"
+    implementation "androidx.datastore:datastore-preferences-rxjava2:1.0.0"
+    implementation "androidx.datastore:datastore-preferences-rxjava3:1.0.0"
+
+    // Version Compare
+    implementation "io.github.g00fy2:versioncompare:1.4.1"
+
+    // Lottie
+    implementation "com.airbnb.android:lottie-compose:4.1.0"
+
+    // Accompanist
+    implementation "com.google.accompanist:accompanist-pager:$accompanist_version"
+    implementation "com.google.accompanist:accompanist-pager-indicators:$accompanist_version"
+    implementation "com.google.accompanist:accompanist-systemuicontroller:$accompanist_version"
+    implementation "com.google.accompanist:accompanist-insets:$accompanist_version"
+
+    // Coil
+    implementation "io.coil-kt:coil:$coil_version"
+    implementation "io.coil-kt:coil-compose:$coil_version"
+
+    // Media3
+    implementation "androidx.media3:media3-ui:$media3_version"
+    implementation "androidx.media3:media3-exoplayer:$media3_version"
+    implementation "androidx.media3:media3-session:$media3_version"
+    implementation "androidx.media3:media3-exoplayer-hls:$media3_version"
+    implementation "androidx.media3:media3-exoplayer-dash:$media3_version"
+    implementation "androidx.media3:media3-exoplayer-rtsp:$media3_version"
+    implementation "androidx.media3:media3-datasource-okhttp:$media3_version"
+    implementation "androidx.media3:media3-extractor:$media3_version"
+    implementation "androidx.media3:media3-decoder:$media3_version"
+    implementation "androidx.media3:media3-datasource:$media3_version"
+    implementation "androidx.media3:media3-common:$media3_version"
+
 }

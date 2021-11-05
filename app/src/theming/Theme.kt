@@ -1,33 +1,32 @@
-package com.denuafhaengige.duahandroid.ui.theme
+package dk.denuafhaengige.android.theming
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 
 private val DarkColorPalette = darkColors(
-    primary = Blue200,
-    primaryVariant = Blue700,
-    secondary = Blue200
+    primary = Color.White,
+    secondary = Color.LightGray,
+    background = Color.Black,
+    surface = VeryDarkGrey,
+    onBackground = Color.White,
+    onSurface = Color.White,
 )
 
 private val LightColorPalette = lightColors(
-    primary = Blue500,
-    primaryVariant = Blue700,
-    secondary = Blue200
-    /* Other default colors to override
+    primary = RedColor,
+    secondary = Color.Gray,
     background = Color.White,
-    surface = Color.White,
-    onPrimary = Color.White,
-    onSecondary = Color.Black,
+    surface = VeryLightGrey,
     onBackground = Color.Black,
     onSurface = Color.Black,
-    */
 )
 
 @Composable
-fun DenUafhængigeTheme(
+fun DuahTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable() () -> Unit
 ) {

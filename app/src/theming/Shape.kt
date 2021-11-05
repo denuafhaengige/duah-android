@@ -1,4 +1,4 @@
-package com.denuafhaengige.duahandroid.ui.theme
+package dk.denuafhaengige.android.theming
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Shapes

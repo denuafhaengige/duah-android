@@ -1,7 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!-- System -->
     <string name="app_name">Uafhængig</string>
     <string name="app_name_long">Den Uafhængige</string>
-    <string name="title_activity_main">MainActivity</string>
-    <!--    <string name="radio_endpoint">https://radio.denuafhaengige.dk/test</string>-->
-    <string name="radio_endpoint">https://radio.denuafhaengige.dk/live</string>
-    </resources>
+    <string name="title_activity_main">Uafhængig</string>
+
+    <!-- Localization -->
+
+    <!-- Loading -->
+    <string name="loading_descriptor_connecting">forbinder</string>
+    <string name="loading_descriptor_starting">starter</string>
+    <string name="loading_descriptor_configuring">konfigurerer</string>
+    <string name="loading_descriptor_synchronizing">henter %1s</string>
+    <string name="loading_descriptor_preparing_content">forbereder indhold</string>
+
+    <!-- Entity types -->
+    <plurals name="entity_type_broadcast">
+        <item quantity="one">udsendelse</item>
+        <item quantity="other">udsendelser</item>
+    </plurals>
+    <plurals name="entity_type_program">
+        <item quantity="one">program</item>
+        <item quantity="other">programmer</item>
+    </plurals>
+    <plurals name="entity_type_channel">
+        <item quantity="one">kanal</item>
+        <item quantity="other">kanaler</item>
+    </plurals>
+    <plurals name="entity_type_employee">
+        <item quantity="one">medarbejder</item>
+        <item quantity="other">medarbejdere</item>
+    </plurals>
+    <plurals name="entity_type_setting">
+        <item quantity="one">indstilling</item>
+        <item quantity="other">indstillinger</item>
+    </plurals>
+
+    <!-- Entity type variants -->
+    <plurals name="entity_type_host_employee">
+        <item quantity="one">vært</item>
+        <item quantity="other">værter</item>
+    </plurals>
+
+    <!-- Fallback values -->
+    <string name="fallback_program_title">den uafhængige</string>
+
+    <!-- Titles -->
+    <string name="title_latest_broadcasts">seneste udsendelser</string>
+
+</resources>
