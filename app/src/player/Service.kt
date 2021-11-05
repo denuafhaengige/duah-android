@@ -45,7 +45,7 @@ class PlayerService: Player.Listener, MediaLibraryService() {
         settings = Settings(context = applicationContext)
         wireContentService()
         wireMediaSession()
-        Log.debug("RadioService | onCreate | media session token: ${mediaSession.token}")
+        Log.debug("PlayerService | onCreate | media session token: ${mediaSession.token}")
     }
 
     override fun onDestroy() {

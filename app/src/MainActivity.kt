@@ -24,7 +24,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
-        startForegroundService(Intent(this, ContentService::class.java))
+        startService(Intent(this, ContentService::class.java))
 
         settings = Settings(context = applicationContext)
         player = Player(context = applicationContext, settings)
