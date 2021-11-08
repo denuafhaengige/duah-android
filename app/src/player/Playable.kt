@@ -58,7 +58,7 @@ class PlayableFlow(playable: Playable, store: ContentStore) {
     }
 }
 
-sealed class Playable: Identifiable, Titled, MetaTitled {
+sealed class Playable: Identifiable, Titled, MetaTitled, Imaged {
 
     class Broadcast(val broadcast: BroadcastModel): Playable() {
         override val title: String
@@ -67,6 +67,10 @@ sealed class Playable: Identifiable, Titled, MetaTitled {
             get() = broadcast.metaTitle
         override val metaTitleSupplement: String?
             get() = broadcast.metaTitleSupplement
+        override val squareImageUri: Uri?
+            get() = broadcast.squareImageUri
+        override val wideImageUri: Uri?
+            get() = broadcast.wideImageUri
     }
     class Channel(val channel: ChannelModel): Playable() {
         override val title: String
@@ -75,6 +79,10 @@ sealed class Playable: Identifiable, Titled, MetaTitled {
             get() = channel.metaTitle
         override val metaTitleSupplement: String?
             get() = channel.metaTitleSupplement
+        override val squareImageUri: Uri?
+            get() = channel.squareImageUri
+        override val wideImageUri: Uri?
+            get() = channel.wideImageUri
     }
 
     // MARK: Types
@@ -188,5 +196,8 @@ sealed class Playable: Identifiable, Titled, MetaTitled {
                 }
             }
         }
+
+        val example: Playable
+            get() = Broadcast(broadcast = BroadcastModel.example)
     }
 }

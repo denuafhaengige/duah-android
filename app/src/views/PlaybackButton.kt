@@ -37,20 +37,19 @@ enum class PlaybackButtonStyle {
     LIVE,
 }
 
-private enum class PlaybackButtonVariant {
+enum class PlaybackButtonVariant {
     PLAY,
     PAUSE,
     LOADING,
 }
 
 @Composable
-fun PlaybackButton(
+fun DynamicPlaybackButton(
     playerViewModel: PlayerViewModel,
     playable: Playable,
     style: PlaybackButtonStyle,
     modifier: Modifier,
 ) {
-
     val observedPlayerState by playerViewModel.state.observeAsState()
     val observedLivePlayerPlayable by playerViewModel.playable.observeAsState()
 
@@ -80,6 +79,16 @@ fun PlaybackButton(
         resume = playableIsPlayerPlayable,
     )
 
+    PlaybackButton(style, variant, modifier, action)
+}
+
+@Composable
+fun PlaybackButton(
+    style: PlaybackButtonStyle,
+    variant: PlaybackButtonVariant,
+    modifier: Modifier,
+    action: () -> Unit,
+) {
     when (style) {
         PlaybackButtonStyle.CIRCLE -> PlaybackCircleButton(variant, modifier, action)
         PlaybackButtonStyle.LIVE -> PlaybackLiveButton(variant, modifier, action)

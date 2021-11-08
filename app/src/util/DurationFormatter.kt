@@ -33,5 +33,10 @@ abstract class DurationFormatter {
                 result = "${hms.first}:$result"
             return  result
         }
+
+        fun remainingDurationHMS(duration: Long, position: Long): String {
+            val remainingSeconds = (duration - position) / 1000
+            return "-${secondsToHMS(remainingSeconds.toInt())}"
+        }
     }
 }

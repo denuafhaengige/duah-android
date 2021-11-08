@@ -23,30 +23,38 @@ fun Home(viewModel: AppViewModel) {
     val scrollState = rememberScrollState()
     val liveChannel by viewModel.liveChannel.observeAsState()
 
-    Scaffold(
-        modifier = Modifier.navigationBarsPadding(),
-        topBar = { LogoTopAppBar(model = LogoTopAppBarModel(playerViewModel = viewModel.playerViewModel, liveChannel = liveChannel)) },
-        content = { paddingValues ->
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(scrollState)
-                    .padding(paddingValues)
-            ) {
-                featuredContent?.let {
-                    FeaturedPager(
-                        content = it,
-                        playerViewModel = viewModel.playerViewModel,
-                    )
+    Box(
+        modifier = Modifier
+            .fillMaxSize(),
+    ) {
+        Scaffold(
+            modifier = Modifier.navigationBarsPadding(),
+            topBar = { LogoTopAppBar(model = LogoTopAppBarModel(playerViewModel = viewModel.playerViewModel, liveChannel = liveChannel)) },
+            content = { paddingValues ->
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(scrollState)
+                        .padding(paddingValues)
+                ) {
+                    featuredContent?.let {
+                        FeaturedPager(
+                            content = it,
+                            playerViewModel = viewModel.playerViewModel,
+                        )
+                    }
+                    latestBroadcasts?.let {
+                        LatestBroadcasts(
+                            playableBroadcasts = it,
+                            playerViewModel = viewModel.playerViewModel
+                        )
+                    }
                 }
-                latestBroadcasts?.let {
-                    LatestBroadcasts(
-                        playableBroadcasts = it,
-                        playerViewModel = viewModel.playerViewModel
-                    )
-                }
-            }
-        },
-        bottomBar = { AnimatedTinyPlayer(model = TinyPlayerModel(playerViewModel = viewModel.playerViewModel)) }
-    )
+            },
+            bottomBar = { AnimatedTinyPlayer(model = TinyPlayerModel(playerViewModel = viewModel.playerViewModel)) },
+        )
+        DynamicLargePlayer(playerViewModel = viewModel.playerViewModel)
+    }
+    
+    
 }

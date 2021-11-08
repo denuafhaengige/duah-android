@@ -78,7 +78,7 @@ fun BroadcastVisual(
                 .padding(vertical = hostPhotoDiameter.div(4), horizontal = hostPhotoDiameter.div(6)),
             contentAlignment = Alignment.BottomEnd,
         ) {
-            PlaybackButton(
+            DynamicPlaybackButton(
                 playerViewModel = playerViewModel,
                 playable = playableBroadcast,
                 style = PlaybackButtonStyle.CIRCLE,

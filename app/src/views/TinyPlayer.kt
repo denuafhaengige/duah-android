@@ -5,6 +5,7 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -50,7 +51,8 @@ fun AnimatedTinyPlayer(model: TinyPlayerModel) {
             modifier = Modifier
                 .background(Color.Black)
                 .fillMaxWidth()
-                .height(model.height),
+                .height(model.height)
+                .clickable { model.playerViewModel.toggleLargePlayer.value = true },
             contentAlignment = Alignment.CenterStart,
         ) {
             livePlayable?.let {
@@ -79,7 +81,7 @@ fun TinyPlayerContent(height: Dp, livePlayable: LivePlayable, playerViewModel: P
             .fillMaxSize(),
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
-        PlaybackButton(
+        DynamicPlaybackButton(
             style = PlaybackButtonStyle.PLAIN,
             playerViewModel = playerViewModel,
             playable = playable,
@@ -145,7 +147,12 @@ private fun TinyPlayerTimeIndicator(modifier: Modifier, playable: Playable, play
 
     val duration by playerViewModel.duration.observeAsState()
     val position by playerViewModel.position.observeAsState()
-    val hms = hmsString(duration, position)
+
+    val durationPosition = duration?.let { nonNullDuration ->
+        position?.let { nonNullPosition ->
+            Pair(nonNullDuration, nonNullPosition)
+        }
+    }
 
     Column(
         modifier = modifier,
@@ -154,9 +161,14 @@ private fun TinyPlayerTimeIndicator(modifier: Modifier, playable: Playable, play
     ) {
         when {
             playable is Playable.Channel ->
-                TinyPlayerLiveLabel()
-            playable is Playable.Broadcast && hms != null ->
-                TinyPlayerTimeLabel(text = hms)
+                LiveLabel()
+            playable is Playable.Broadcast && durationPosition != null ->
+                TinyPlayerTimeLabel(
+                    text = DurationFormatter.remainingDurationHMS(
+                        duration = durationPosition.first,
+                        position = durationPosition.second,
+                    )
+                )
             playable is Playable.Broadcast ->
                 CircularProgressIndicator(
                     modifier = Modifier
@@ -167,8 +179,6 @@ private fun TinyPlayerTimeIndicator(modifier: Modifier, playable: Playable, play
         }
     }
 }
-
-
 
 @Composable
 private fun TinyPlayerTimeLabel(text: String) {
@@ -187,50 +197,4 @@ private fun TinyPlayerTimeLabel(text: String) {
             .fillMaxWidth()
             .padding(end = timeIndicatorEndPadding),
     )
-}
-
-@Composable
-private fun TinyPlayerLiveLabel() {
-    Row(
-        modifier = Modifier
-            .size(width = 60.dp, height = 25.dp)
-            .background(Color.LightGray, shape = RoundedCornerShape(30.dp)),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center,
-    ) {
-        Box(
-            modifier = Modifier
-                .padding(end = 4.dp)
-                .size(8.dp)
-                .background(Color.Black, shape = CircleShape),
-        )
-        Text(
-            text = "LIVE",
-            style = TextStyle(
-                color = Color.Black,
-                fontWeight = FontWeight.Black,
-                fontSize = 10.sp,
-            ),
-        )
-    }
-}
-
-private fun hmsString(duration: Long?, position: Long?): String? {
-    val nonNullDuration = duration ?: return null
-    val nonNullPosition = position ?: return null
-    val remainingSeconds = (nonNullDuration - nonNullPosition) / 1000
-    return DurationFormatter.secondsToHMS(remainingSeconds.toInt())
-}
-
-@Preview
-@Composable
-private fun TinyPlayerLiveLabelPreview() {
-    Box(
-        modifier = Modifier
-            .size(width = 200.dp, height = 80.dp)
-            .background(Color.Black),
-        contentAlignment = Alignment.Center,
-    ) {
-        TinyPlayerLiveLabel()
-    }
 }

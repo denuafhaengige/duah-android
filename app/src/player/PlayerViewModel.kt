@@ -32,6 +32,8 @@ class PlayerViewModel(val player: Player) {
     private val _position = MutableLiveData<Long?>(null)
     val position: LiveData<Long?> = _position
 
+    val toggleLargePlayer = MutableLiveData(false)
+
     // MARK: Init
 
     init {

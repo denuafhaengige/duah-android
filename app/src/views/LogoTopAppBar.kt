@@ -86,7 +86,7 @@ fun LogoTopAppBarLiveChannelButton(
     val channel by liveChannel.liveEntity.observeAsState()
 
     channel?.let {
-        PlaybackButton(
+        DynamicPlaybackButton(
             playerViewModel = playerViewModel,
             playable = Playable.Channel(channel = it),
             style = PlaybackButtonStyle.LIVE,

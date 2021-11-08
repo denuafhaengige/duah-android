@@ -32,9 +32,16 @@ class Player (private val context: Context, private val settings: Settings) {
         }
     }
 
+    enum class LoadingReason {
+        STARTING,
+        PAUSING,
+        BUFFERING_TO_CATCH_UP,
+        SEEKING,
+    }
+
     sealed class State {
         object Idle : State()
-        object Loading: State()
+        data class Loading(val reason: LoadingReason): State()
         object Paused: State()
         object Playing: State()
         data class Error(val error: Player.Error): State()
@@ -47,6 +54,7 @@ class Player (private val context: Context, private val settings: Settings) {
         object BufferingToCatchUp: InnerState()
         object PausingPlayback: InnerState()
         object Paused: InnerState()
+        data class Seeking(val playImmediately: Boolean): InnerState()
         data class RetryingAfterError(val error: Player.Error, val retryCount: Int = 0): InnerState()
         data class Error(val error: Player.Error): InnerState()
     }
@@ -60,10 +68,15 @@ class Player (private val context: Context, private val settings: Settings) {
         }
         when (newValue) {
             is InnerState.Idle -> _state.value = State.Idle
-            is InnerState.StartingPlayback,
-            is InnerState.PausingPlayback,
             is InnerState.RetryingAfterError,
-            is InnerState.BufferingToCatchUp -> _state.value = State.Loading
+            is InnerState.StartingPlayback ->
+                State.Loading(LoadingReason.STARTING)
+            is InnerState.PausingPlayback ->
+                State.Loading(LoadingReason.PAUSING)
+            is InnerState.BufferingToCatchUp -> _state.value =
+                State.Loading(LoadingReason.BUFFERING_TO_CATCH_UP)
+            is InnerState.Seeking -> _state.value =
+                State.Loading(LoadingReason.SEEKING)
             is InnerState.Playing -> _state.value = State.Playing
             is InnerState.Paused -> _state.value = State.Paused
             is InnerState.Error -> _state.value = State.Error(error = newValue.error)
@@ -149,6 +162,15 @@ class Player (private val context: Context, private val settings: Settings) {
         mediaController.pause()
     }
 
+    fun seek(target: Long) = scope.launch {
+        if (innerState is InnerState.Seeking) {
+            return@launch
+        }
+        observePosition = false
+        innerState = InnerState.Seeking(playImmediately = innerState is InnerState.Playing)
+        mediaController.seekTo(target)
+    }
+
     // MARK: Init
 
     init {
@@ -190,6 +212,12 @@ class Player (private val context: Context, private val settings: Settings) {
             super.onPlaybackStateChanged(playbackState)
             val playbackStateString = Media3Integration.stringForPlaybackState(playbackState)
             Log.debug("PlayerService | onPlaybackStateChanged: $playbackStateString")
+            innerState.let {
+                if (playbackState == STATE_READY && it is InnerState.Seeking && !it.playImmediately) {
+                    _position.value = mediaController.currentPosition
+                    innerState = InnerState.Paused
+                }
+            }
         }
 
         override fun onIsLoadingChanged(isLoading: Boolean) {
@@ -201,13 +229,17 @@ class Player (private val context: Context, private val settings: Settings) {
             super.onIsPlayingChanged(isPlaying)
             Log.debug("PlayerService | onIsPlayingChanged: $isPlaying")
             if (isPlaying) {
+                _position.value = mediaController.currentPosition
                 observePosition = true
                 innerState = InnerState.Playing
                 return
             }
             observePosition = false
             innerState = when (mediaController.playbackState) {
-                STATE_BUFFERING -> InnerState.BufferingToCatchUp
+                STATE_BUFFERING -> {
+                    if (innerState is InnerState.Seeking) innerState
+                    else InnerState.BufferingToCatchUp
+                }
                 STATE_ENDED, STATE_IDLE -> InnerState.Idle
                 STATE_READY -> InnerState.Paused
                 else -> throw Throwable("Shut up")
