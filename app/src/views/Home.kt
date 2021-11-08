@@ -53,7 +53,7 @@ fun Home(viewModel: AppViewModel) {
             },
             bottomBar = { AnimatedTinyPlayer(model = TinyPlayerModel(playerViewModel = viewModel.playerViewModel)) },
         )
-        DynamicLargePlayer(playerViewModel = viewModel.playerViewModel)
+        DynamicLargePlayer(playerViewModel = viewModel.playerViewModel, liveChannel = liveChannel)
     }
     
     

@@ -14,12 +14,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -28,17 +28,23 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
+import com.denuafhaengige.duahandroid.R
+import com.denuafhaengige.duahandroid.models.ChannelWithCurrentBroadcast
 import com.denuafhaengige.duahandroid.player.Playable
 import com.denuafhaengige.duahandroid.player.Player
 import com.denuafhaengige.duahandroid.player.PlayerViewModel
 import com.denuafhaengige.duahandroid.player.StreamType
 import com.denuafhaengige.duahandroid.util.DurationFormatter
+import com.denuafhaengige.duahandroid.util.LiveEntity
 import com.denuafhaengige.duahandroid.util.Log
 import com.google.accompanist.insets.statusBarsPadding
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun DynamicLargePlayer(playerViewModel: PlayerViewModel) {
+fun DynamicLargePlayer(
+    playerViewModel: PlayerViewModel,
+    liveChannel: LiveEntity<ChannelWithCurrentBroadcast>?,
+) {
 
     val toggle by playerViewModel.toggleLargePlayer.observeAsState(false)
     val closeButtonAction = { playerViewModel.toggleLargePlayer.value = !toggle }
@@ -56,7 +62,7 @@ fun DynamicLargePlayer(playerViewModel: PlayerViewModel) {
             playable = playable,
             closeButtonAction = closeButtonAction,
             playbackControls = {
-                DynamicLargePlayerPlaybackControls(playerViewModel, playable)
+                DynamicLargePlayerPlaybackControls(playerViewModel, playable, liveChannel)
             },
             seekControl = {
                 DynamicLargePlayerSeekControl(playerViewModel)
@@ -162,10 +168,26 @@ fun LargePlayerPlayableVisual(playable: Playable, modifier: Modifier = Modifier)
 }
 
 @Composable
-fun DynamicLargePlayerPlaybackControls(playerViewModel: PlayerViewModel, playable: Playable) {
+fun DynamicLargePlayerPlaybackControls(
+    playerViewModel: PlayerViewModel,
+    playable: Playable,
+    liveChannel: LiveEntity<ChannelWithCurrentBroadcast>?,
+) {
     LargePlayerPlaybackControls(
-        jumpToStartButton = {},
-        jumpBack15SecButton = {},
+        jumpToStartButton = {
+            DynamicJumpButton(
+                variant = JumpButtonVariant.BACK_START,
+                playerViewModel = playerViewModel,
+                liveChannel = liveChannel
+            )
+        },
+        jumpBack15SecButton = {
+            DynamicJumpButton(
+                variant = JumpButtonVariant.BACK_15,
+                playerViewModel = playerViewModel,
+                liveChannel = liveChannel
+            )
+        },
         playbackButton = {
             DynamicPlaybackButton(
                 playerViewModel = playerViewModel,
@@ -175,8 +197,20 @@ fun DynamicLargePlayerPlaybackControls(playerViewModel: PlayerViewModel, playabl
                     .size(100.dp),
             )
         },
-        jumpForward15SecButton = {},
-        jumpToLiveButton = {},
+        jumpForward15SecButton = {
+            DynamicJumpButton(
+                variant = JumpButtonVariant.FORWARD_15,
+                playerViewModel = playerViewModel,
+                liveChannel = liveChannel
+            )
+        },
+        jumpToLiveButton = {
+            DynamicJumpButton(
+                variant = JumpButtonVariant.FORWARD_LIVE,
+                playerViewModel = playerViewModel,
+                liveChannel = liveChannel
+            )
+        },
         modifier = Modifier
             .fillMaxWidth(),
     )
@@ -341,8 +375,20 @@ private fun LiveLargePlayerPreview() {
         playable = Playable.example,
         playbackControls = {
             LargePlayerPlaybackControls(
-                jumpToStartButton = {},
-                jumpBack15SecButton = {},
+                jumpToStartButton = {
+                    JumpButton(
+                        variant = JumpButtonVariant.BACK_START,
+                        action = {},
+                        modifier = Modifier.size(60.dp)
+                    )
+                },
+                jumpBack15SecButton = {
+                    JumpButton(
+                        variant = JumpButtonVariant.BACK_15,
+                        action = {},
+                        modifier = Modifier.size(60.dp)
+                    )
+                },
                 playbackButton = {
                     PlaybackButton(
                         style = PlaybackButtonStyle.PLAIN,
@@ -352,8 +398,20 @@ private fun LiveLargePlayerPreview() {
                         action = {}
                     )
                 },
-                jumpForward15SecButton = {},
-                jumpToLiveButton = {},
+                jumpForward15SecButton = {
+                    JumpButton(
+                        variant = JumpButtonVariant.FORWARD_15,
+                        action = {},
+                        modifier = Modifier.size(60.dp)
+                    )
+                },
+                jumpToLiveButton = {
+                    JumpButton(
+                        variant = JumpButtonVariant.FORWARD_LIVE,
+                        action = {},
+                        modifier = Modifier.size(60.dp)
+                    )
+                },
                 modifier = Modifier
                     .fillMaxWidth(),
             )
@@ -376,19 +434,43 @@ private fun VodLargePlayerPreview() {
         playable = Playable.example,
         playbackControls = {
             LargePlayerPlaybackControls(
-                jumpToStartButton = {},
-                jumpBack15SecButton = {},
-                playbackButton = {
-                     PlaybackButton(
-                         style = PlaybackButtonStyle.PLAIN,
-                         variant = PlaybackButtonVariant.PLAY,
-                         modifier = Modifier
-                             .size(100.dp),
-                         action = {}
-                     )
+                jumpToStartButton = {
+                    JumpButton(
+                        variant = JumpButtonVariant.BACK_START,
+                        action = {},
+                        modifier = Modifier.size(60.dp)
+                    )
                 },
-                jumpForward15SecButton = {},
-                jumpToLiveButton = {},
+                jumpBack15SecButton = {
+                    JumpButton(
+                        variant = JumpButtonVariant.BACK_15,
+                        action = {},
+                        modifier = Modifier.size(60.dp)
+                    )
+                },
+                playbackButton = {
+                    PlaybackButton(
+                        style = PlaybackButtonStyle.PLAIN,
+                        variant = PlaybackButtonVariant.PLAY,
+                        modifier = Modifier
+                            .size(100.dp),
+                        action = {}
+                    )
+                },
+                jumpForward15SecButton = {
+                    JumpButton(
+                        variant = JumpButtonVariant.FORWARD_15,
+                        action = {},
+                        modifier = Modifier.size(60.dp)
+                    )
+                },
+                jumpToLiveButton = {
+                    JumpButton(
+                        variant = JumpButtonVariant.FORWARD_LIVE,
+                        action = {},
+                        modifier = Modifier.size(60.dp)
+                    )
+                },
                 modifier = Modifier
                     .fillMaxWidth(),
             )
