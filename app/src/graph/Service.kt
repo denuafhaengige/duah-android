@@ -1,19 +1,15 @@
 package com.denuafhaengige.duahandroid.graph
 
 import android.net.Uri
-import com.denuafhaengige.duahandroid.models.*
 import com.squareup.moshi.Moshi
-import com.squareup.moshi.adapters.Rfc3339DateJsonAdapter
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.tinder.scarlet.*
 import com.tinder.scarlet.messageadapter.moshi.MoshiMessageAdapter
 import com.tinder.scarlet.streamadapter.rxjava2.RxJava2StreamAdapterFactory
 import com.tinder.scarlet.websocket.okhttp.newWebSocketFactory
 import com.tinder.scarlet.ws.*
-import dev.zacsweers.moshix.adapters.JsonString
 import io.reactivex.Flowable
 import okhttp3.OkHttpClient
-import java.util.*
+import java.time.Duration
 
 interface GraphService {
 
@@ -39,7 +35,9 @@ interface GraphService {
 class GraphServiceFactory(val moshi: Moshi) {
 
     fun createService(uri: Uri, lifecycle: Lifecycle): GraphService {
-        val okHttpClient = OkHttpClient()
+        val okHttpClient = OkHttpClient.Builder()
+            .pingInterval(duration = Duration.ofSeconds(10))
+            .build()
         val moshiMessageAdapterFactory = MoshiMessageAdapter.Factory(moshi)
         val rxJava2StreamAdapterFactory = RxJava2StreamAdapterFactory()
         val scarletInstance = Scarlet.Builder()
