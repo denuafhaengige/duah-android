@@ -40,6 +40,7 @@ enum class EntityType(val stringValue: String) {
                 Broadcast::class.java -> BROADCAST
                 Program::class.java -> PROGRAM
                 Employee::class.java -> EMPLOYEE
+                File::class.java -> FILE
                 Setting::class.java -> SETTING
                 Channel::class.java -> CHANNEL
                 else -> UNKNOWN
@@ -54,6 +55,7 @@ enum class EntityType(val stringValue: String) {
             PROGRAM -> Program::class.java
             FILE -> File::class.java
             SETTING -> Setting::class.java
+            CHANNEL -> Channel::class.java
             else -> Object::class.java
         }
     }
