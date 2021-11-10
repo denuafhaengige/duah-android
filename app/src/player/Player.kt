@@ -150,7 +150,14 @@ class Player (private val context: Context, private val settings: Settings) {
 
     private fun innerPlay() {
         innerState = InnerState.StartingPlayback()
-        mediaController.prepare()
+        val mediaControllerPlaybackState =
+            Media3Integration.stringForPlaybackState(mediaController.playbackState)
+        Log.debug("Player | innerPlay | mediaController.state: $mediaControllerPlaybackState")
+        if (mediaController.playbackState == STATE_READY) {
+            mediaController.play()
+        } else {
+            mediaController.prepare()
+        }
     }
 
     fun pause() = scope.launch {
