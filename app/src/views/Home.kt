@@ -13,6 +13,7 @@ import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.statusBarsHeight
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.denuafhaengige.duahandroid.AppViewModel
+import com.denuafhaengige.duahandroid.models.BroadcastFetcher
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
@@ -29,7 +30,14 @@ fun Home(viewModel: AppViewModel) {
     ) {
         Scaffold(
             modifier = Modifier.navigationBarsPadding(),
-            topBar = { LogoTopAppBar(model = LogoTopAppBarModel(playerViewModel = viewModel.playerViewModel, liveChannel = liveChannel)) },
+            topBar = {
+                LogoTopAppBar(
+                    model = LogoTopAppBarModel(
+                        playerViewModel = viewModel.playerViewModel,
+                        liveChannel = liveChannel
+                    )
+                )
+             },
             content = { paddingValues ->
                 Column(
                     modifier = Modifier
@@ -51,9 +59,21 @@ fun Home(viewModel: AppViewModel) {
                     }
                 }
             },
-            bottomBar = { AnimatedTinyPlayer(model = TinyPlayerModel(playerViewModel = viewModel.playerViewModel)) },
+            bottomBar = {
+                AnimatedTinyPlayer(
+                    model = TinyPlayerModel(playerViewModel = viewModel.playerViewModel)
+                )
+            },
         )
-        DynamicLargePlayer(playerViewModel = viewModel.playerViewModel, liveChannel = liveChannel)
+        viewModel.contentService?.contentStore?.let { contentStore ->
+            liveChannel?.let { liveChannel ->
+                DynamicLargePlayer(
+                    playerViewModel = viewModel.playerViewModel,
+                    liveChannel = liveChannel,
+                    broadcastFetcher = BroadcastFetcher(store = contentStore)
+                )
+            }
+        }
     }
     
     

@@ -19,11 +19,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.denuafhaengige.duahandroid.R
 import com.denuafhaengige.duahandroid.models.Employee
 import com.denuafhaengige.duahandroid.player.Playable
 import com.denuafhaengige.duahandroid.player.Player
@@ -34,6 +36,7 @@ import com.denuafhaengige.duahandroid.util.LivePlayable
 enum class PlaybackButtonStyle {
     PLAIN,
     CIRCLE,
+    NEW_CIRCLE,
     LIVE,
 }
 
@@ -93,7 +96,54 @@ fun PlaybackButton(
         PlaybackButtonStyle.CIRCLE -> PlaybackCircleButton(variant, modifier, action)
         PlaybackButtonStyle.LIVE -> PlaybackLiveButton(variant, modifier, action)
         PlaybackButtonStyle.PLAIN -> PlaybackPlainButton(variant, modifier, action)
+        PlaybackButtonStyle.NEW_CIRCLE -> PlaybackNewCircleButton(variant, modifier, action)
     }
+}
+
+@Composable
+fun PlaybackNewCircleButton(variant: PlaybackButtonVariant, modifier: Modifier, action: () -> Unit) {
+
+    val colors = ButtonDefaults.buttonColors(
+        backgroundColor = Color.White,
+        contentColor = Color.Black,
+        disabledBackgroundColor = Color.White,
+        disabledContentColor = Color.Black,
+    )
+
+    Button(
+        onClick = action,
+        modifier = modifier,
+        enabled = variant != PlaybackButtonVariant.LOADING,
+        shape = CircleShape,
+        colors = colors,
+        contentPadding = PaddingValues(0.dp)
+    ) {
+        when (variant) {
+            PlaybackButtonVariant.PLAY -> {
+                val xOffsetFraction = .05F
+                Spacer(modifier = Modifier.fillMaxWidth(xOffsetFraction))
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_play),
+                    contentDescription = descriptionForVariant(variant),
+                    modifier = Modifier
+                        .fillMaxSize(fraction = .45F),
+                )
+            }
+            PlaybackButtonVariant.PAUSE ->
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_pause),
+                    contentDescription = descriptionForVariant(variant),
+                    modifier = Modifier
+                        .fillMaxSize(fraction = .45F),
+                )
+            PlaybackButtonVariant.LOADING ->
+                CircularProgressIndicator(
+                    color = Color.Black,
+                    modifier = Modifier.fillMaxSize(fraction = .45F)
+                )
+        }
+    }
+
 }
 
 @Composable
@@ -151,26 +201,38 @@ private fun PlaybackLiveButton(variant: PlaybackButtonVariant, modifier: Modifie
         modifier = modifier,
     ) {
         when (variant) {
-            PlaybackButtonVariant.PLAY,
-            PlaybackButtonVariant.PAUSE ->
+            PlaybackButtonVariant.PLAY -> {
                 Icon(
-                    imageVector = iconForVariant(variant),
+                    painter = painterResource(id = R.drawable.ic_play),
                     contentDescription = descriptionForVariant(variant),
                     modifier = Modifier
-                        .fillMaxHeight(.6F)
-                        .aspectRatio(1F)
-                        .offset(x = (-4).dp),
+                        .fillMaxHeight(.35F)
+                        .aspectRatio(1F),
                 )
-            PlaybackButtonVariant.LOADING ->
+                Spacer(modifier = Modifier.fillMaxWidth(.1F))
+            }
+            PlaybackButtonVariant.PAUSE -> {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_pause),
+                    contentDescription = descriptionForVariant(variant),
+                    modifier = Modifier
+                        .fillMaxHeight(.35F)
+                        .aspectRatio(1F),
+                )
+                Spacer(modifier = Modifier.fillMaxWidth(.1F))
+            }
+            PlaybackButtonVariant.LOADING -> {
+                Spacer(modifier = Modifier.fillMaxWidth(.03F))
                 CircularProgressIndicator(
                     color = Color.White,
                     modifier = Modifier
-                        .fillMaxHeight(.6F)
+                        .fillMaxHeight(.52F)
                         .aspectRatio(1F)
-                        .offset(x = (-4).dp)
                         .padding(4.dp),
                     strokeWidth = 2.dp,
                 )
+                Spacer(modifier = Modifier.fillMaxWidth(.055F))
+            }
         }
         Text(
             maxLines = 1,
@@ -179,7 +241,12 @@ private fun PlaybackLiveButton(variant: PlaybackButtonVariant, modifier: Modifie
                 fontSize = 12.sp,
             ),
             text = "LIVE",
+            modifier = Modifier
+                .offset(y = (-.5).dp)
         )
+        if (variant == PlaybackButtonVariant.LOADING) {
+            Spacer(modifier = Modifier.fillMaxWidth(.21F))
+        }
     }
 }
 
@@ -202,13 +269,22 @@ private fun PlaybackPlainButton(variant: PlaybackButtonVariant, modifier: Modifi
         contentPadding = PaddingValues(0.dp),
     ) {
         when (variant) {
-            PlaybackButtonVariant.PLAY,
-            PlaybackButtonVariant.PAUSE ->
+            PlaybackButtonVariant.PLAY -> {
+                val xOffsetFraction = .02F
+                Spacer(modifier = Modifier.fillMaxWidth(xOffsetFraction))
                 Icon(
-                    imageVector = iconForVariant(variant),
+                    painter = painterResource(id = R.drawable.ic_play),
                     contentDescription = descriptionForVariant(variant),
                     modifier = Modifier
-                        .fillMaxSize(.7F),
+                        .fillMaxSize(.4F),
+                )
+            }
+            PlaybackButtonVariant.PAUSE ->
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_pause),
+                    contentDescription = descriptionForVariant(variant),
+                    modifier = Modifier
+                        .fillMaxSize(.4F),
                 )
             PlaybackButtonVariant.LOADING ->
                 CircularProgressIndicator(
@@ -271,20 +347,42 @@ private fun PlaybackButtonCirclePreviews() {
 
 @Preview
 @Composable
-private fun PlaybackButtonLivePreviews() {
+private fun PlaybackButtonNewCirclePreviews() {
     val action = ({})
-    val buttonModifier = Modifier
-        .size(width = 80.dp, height = 30.dp)
     Box(
         modifier = Modifier
             .background(Color.DarkGray)
-            .size(width = 300.dp, height = 80.dp)
+            .size(width = 250.dp, height = 100.dp)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxSize(),
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically,
+        ) {
+            PlaybackNewCircleButton(variant = PlaybackButtonVariant.PLAY, modifier = Modifier.size(60.dp), action = action)
+            PlaybackNewCircleButton(variant = PlaybackButtonVariant.PAUSE, modifier = Modifier.size(60.dp), action = action)
+            PlaybackNewCircleButton(variant = PlaybackButtonVariant.LOADING, modifier = Modifier.size(60.dp), action = action)
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun PlaybackButtonLivePreviews() {
+    val action = ({})
+    val buttonModifier = Modifier
+        .size(width = 80.dp, height = 40.dp)
+    Box(
+        modifier = Modifier
+            .background(Color.DarkGray)
+            .size(width = 100.dp, height = 130.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.SpaceEvenly,
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             PlaybackLiveButton(variant = PlaybackButtonVariant.PLAY, modifier = buttonModifier, action = action)
             PlaybackLiveButton(variant = PlaybackButtonVariant.PAUSE, modifier = buttonModifier, action = action)

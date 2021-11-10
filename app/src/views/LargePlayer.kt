@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.denuafhaengige.duahandroid.R
+import com.denuafhaengige.duahandroid.models.BroadcastFetcher
 import com.denuafhaengige.duahandroid.models.ChannelWithCurrentBroadcast
 import com.denuafhaengige.duahandroid.player.Playable
 import com.denuafhaengige.duahandroid.player.Player
@@ -43,7 +44,8 @@ import com.google.accompanist.insets.statusBarsPadding
 @Composable
 fun DynamicLargePlayer(
     playerViewModel: PlayerViewModel,
-    liveChannel: LiveEntity<ChannelWithCurrentBroadcast>?,
+    liveChannel: LiveEntity<ChannelWithCurrentBroadcast>,
+    broadcastFetcher: BroadcastFetcher,
 ) {
 
     val toggle by playerViewModel.toggleLargePlayer.observeAsState(false)
@@ -62,10 +64,15 @@ fun DynamicLargePlayer(
             playable = playable,
             closeButtonAction = closeButtonAction,
             playbackControls = {
-                DynamicLargePlayerPlaybackControls(playerViewModel, playable, liveChannel)
+                DynamicLargePlayerPlaybackControls(
+                    playerViewModel,
+                    playable,
+                    liveChannel,
+                    broadcastFetcher,
+                )
             },
             seekControl = {
-                DynamicLargePlayerSeekControl(playerViewModel)
+                DynamicLargePlayerSeekControl(playerViewModel, liveChannel)
             },
         )
     }
@@ -101,6 +108,7 @@ fun LargePlayer(
             LargePlayerPlayableVisual(playable = playable)
             Column {
                 playbackControls()
+                Spacer(modifier = Modifier.height(20.dp))
                 seekControl()
             }
         }
@@ -126,22 +134,25 @@ fun LargePlayerCloseButton(modifier: Modifier = Modifier, action: () -> Unit) {
 @OptIn(ExperimentalCoilApi::class)
 @Composable
 fun LargePlayerPlayableVisual(playable: Playable, modifier: Modifier = Modifier) {
+
+    val imagePainter =
+        if (playable.squareImageUri != null) rememberImagePainter(playable.squareImageUri)
+        else painterResource(id = R.drawable.logo_white_on_black)
+
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        playable.squareImageUri?.let {
-            Image(
-                painter = rememberImagePainter(it),
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .padding(bottom = 20.dp)
-                    .fillMaxWidth(.7F)
-                    .aspectRatio(1F)
-                    .border(10.dp, Color.LightGray, RectangleShape),
-            )
-        }
+        Image(
+            painter = imagePainter,
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .padding(bottom = 20.dp)
+                .fillMaxWidth(.7F)
+                .aspectRatio(1F)
+                .border(10.dp, Color.LightGray, RectangleShape),
+        )
         Text(
             text = playable.title,
             style = TextStyle(
@@ -171,44 +182,57 @@ fun LargePlayerPlayableVisual(playable: Playable, modifier: Modifier = Modifier)
 fun DynamicLargePlayerPlaybackControls(
     playerViewModel: PlayerViewModel,
     playable: Playable,
-    liveChannel: LiveEntity<ChannelWithCurrentBroadcast>?,
+    liveChannel: LiveEntity<ChannelWithCurrentBroadcast>,
+    broadcastFetcher: BroadcastFetcher,
 ) {
     LargePlayerPlaybackControls(
         jumpToStartButton = {
             DynamicJumpButton(
                 variant = JumpButtonVariant.BACK_START,
                 playerViewModel = playerViewModel,
-                liveChannel = liveChannel
+                liveChannel = liveChannel,
+                broadcastFetcher = broadcastFetcher,
+                modifier = Modifier
+                    .size(50.dp),
             )
         },
         jumpBack15SecButton = {
             DynamicJumpButton(
                 variant = JumpButtonVariant.BACK_15,
                 playerViewModel = playerViewModel,
-                liveChannel = liveChannel
+                liveChannel = liveChannel,
+                broadcastFetcher = broadcastFetcher,
+                modifier = Modifier
+                    .size(50.dp),
             )
         },
         playbackButton = {
             DynamicPlaybackButton(
                 playerViewModel = playerViewModel,
                 playable = playable,
-                style = PlaybackButtonStyle.PLAIN,
+                style = PlaybackButtonStyle.NEW_CIRCLE,
                 modifier = Modifier
-                    .size(100.dp),
+                    .size(80.dp)
             )
         },
         jumpForward15SecButton = {
             DynamicJumpButton(
                 variant = JumpButtonVariant.FORWARD_15,
                 playerViewModel = playerViewModel,
-                liveChannel = liveChannel
+                liveChannel = liveChannel,
+                broadcastFetcher = broadcastFetcher,
+                modifier = Modifier
+                    .size(50.dp),
             )
         },
         jumpToLiveButton = {
             DynamicJumpButton(
                 variant = JumpButtonVariant.FORWARD_LIVE,
                 playerViewModel = playerViewModel,
-                liveChannel = liveChannel
+                liveChannel = liveChannel,
+                broadcastFetcher = broadcastFetcher,
+                modifier = Modifier
+                    .size(50.dp),
             )
         },
         modifier = Modifier
@@ -228,7 +252,7 @@ fun LargePlayerPlaybackControls(
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceEvenly,
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         jumpToStartButton()
         jumpBack15SecButton()
@@ -239,14 +263,19 @@ fun LargePlayerPlaybackControls(
 }
 
 @Composable
-fun DynamicLargePlayerSeekControl(playerViewModel: PlayerViewModel) {
+fun DynamicLargePlayerSeekControl(playerViewModel: PlayerViewModel, liveChannel: LiveEntity<ChannelWithCurrentBroadcast>) {
 
     val observedStream by playerViewModel.stream.observeAsState()
     val stream = observedStream ?: return
     val observedPlayerState by playerViewModel.state.observeAsState()
     val duration by playerViewModel.duration.observeAsState()
     val position by playerViewModel.position.observeAsState()
+    val observedChannel by liveChannel.liveEntity.observeAsState()
+    val channel = observedChannel ?: return
     var seekTarget by remember { mutableStateOf<Long?>(null) }
+    val seekingBeyond2MinLeft = seekTarget?.let { nonNullSeekTarget -> duration?.let { nonNullDuration ->
+        nonNullDuration - nonNullSeekTarget < (2 * 60 * 1000).toLong()
+    }} == true
 
     LaunchedEffect(observedPlayerState) {
         Log.debug("DynamicLargePlayerSeekControl | LaunchedEffect | observedPlayerState: $observedPlayerState")
@@ -263,8 +292,16 @@ fun DynamicLargePlayerSeekControl(playerViewModel: PlayerViewModel) {
             else LargePlayerSeekControlVariant.VOD,
         position = seekTarget ?: position,
         duration = duration,
+        overrideHideDurationPositionShowLiveLabel =
+            stream.type == StreamType.HLS_EVENT && seekingBeyond2MinLeft,
         onSeekTargetChanged = { seekTarget = it },
-        onSeekDone = { seekTarget?.let { playerViewModel.player.seek(it) } }
+        onSeekDone = { seekTarget?.let {
+            if (stream.type == StreamType.HLS_EVENT && seekingBeyond2MinLeft) {
+                playerViewModel.player.play(Playable.Channel(channel))
+            } else {
+                playerViewModel.player.seek(it)
+            }
+        }}
     )
 }
 
@@ -278,6 +315,7 @@ fun LargePlayerSeekControl(
     variant: LargePlayerSeekControlVariant,
     duration: Long? = null,
     position: Long? = null,
+    overrideHideDurationPositionShowLiveLabel: Boolean = false,
     onSeekTargetChanged: (Long) -> Unit = {},
     onSeekDone: () -> Unit = {},
 ) {
@@ -315,12 +353,13 @@ fun LargePlayerSeekControl(
     Column {
         Row(
             modifier = Modifier
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .height(35.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             when {
-                variant == LargePlayerSeekControlVariant.LIVE -> {
+                variant == LargePlayerSeekControlVariant.LIVE || overrideHideDurationPositionShowLiveLabel -> {
                     Spacer(modifier = Modifier)
                     LiveLabel()
                 }
@@ -391,7 +430,7 @@ private fun LiveLargePlayerPreview() {
                 },
                 playbackButton = {
                     PlaybackButton(
-                        style = PlaybackButtonStyle.PLAIN,
+                        style = PlaybackButtonStyle.NEW_CIRCLE,
                         variant = PlaybackButtonVariant.PLAY,
                         modifier = Modifier
                             .size(100.dp),
@@ -438,22 +477,23 @@ private fun VodLargePlayerPreview() {
                     JumpButton(
                         variant = JumpButtonVariant.BACK_START,
                         action = {},
-                        modifier = Modifier.size(60.dp)
+                        modifier = Modifier.size(50.dp),
+                        enabled = false,
                     )
                 },
                 jumpBack15SecButton = {
                     JumpButton(
                         variant = JumpButtonVariant.BACK_15,
                         action = {},
-                        modifier = Modifier.size(60.dp)
+                        modifier = Modifier.size(50.dp)
                     )
                 },
                 playbackButton = {
                     PlaybackButton(
-                        style = PlaybackButtonStyle.PLAIN,
+                        style = PlaybackButtonStyle.NEW_CIRCLE,
                         variant = PlaybackButtonVariant.PLAY,
                         modifier = Modifier
-                            .size(100.dp),
+                            .size(80.dp),
                         action = {}
                     )
                 },
@@ -461,18 +501,19 @@ private fun VodLargePlayerPreview() {
                     JumpButton(
                         variant = JumpButtonVariant.FORWARD_15,
                         action = {},
-                        modifier = Modifier.size(60.dp)
+                        modifier = Modifier.size(50.dp)
                     )
                 },
                 jumpToLiveButton = {
                     JumpButton(
                         variant = JumpButtonVariant.FORWARD_LIVE,
                         action = {},
-                        modifier = Modifier.size(60.dp)
+                        modifier = Modifier.size(50.dp)
                     )
                 },
                 modifier = Modifier
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .padding(bottom = 20.dp),
             )
         },
         seekControl = {

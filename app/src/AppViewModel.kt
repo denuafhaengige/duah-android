@@ -48,7 +48,7 @@ class AppViewModel(
 
     private val scope = CoroutineScope(Dispatchers.Main)
     private lateinit var _contentService: WeakReference<ContentService>
-    private val contentService
+    val contentService
         get() = _contentService.get()
     val playerViewModel = PlayerViewModel(player)
 

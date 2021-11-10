@@ -81,7 +81,7 @@ fun BroadcastVisual(
             DynamicPlaybackButton(
                 playerViewModel = playerViewModel,
                 playable = playableBroadcast,
-                style = PlaybackButtonStyle.CIRCLE,
+                style = PlaybackButtonStyle.NEW_CIRCLE,
                 modifier = Modifier
                     .size(hostPhotoDiameter)
             )

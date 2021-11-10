@@ -151,7 +151,6 @@ class Player (private val context: Context, private val settings: Settings) {
     private fun innerPlay() {
         innerState = InnerState.StartingPlayback()
         mediaController.prepare()
-        mediaController.play()
     }
 
     fun pause() = scope.launch {
@@ -212,10 +211,24 @@ class Player (private val context: Context, private val settings: Settings) {
             super.onPlaybackStateChanged(playbackState)
             val playbackStateString = Media3Integration.stringForPlaybackState(playbackState)
             Log.debug("PlayerService | onPlaybackStateChanged: $playbackStateString")
-            innerState.let {
-                if (playbackState == STATE_READY && it is InnerState.Seeking && !it.playImmediately) {
-                    _position.value = mediaController.currentPosition
-                    innerState = InnerState.Paused
+            innerState.let { atomicInnerState ->
+                when {
+                    playbackState == STATE_READY &&
+                    atomicInnerState is InnerState.Seeking &&
+                    !atomicInnerState.playImmediately -> {
+                        _position.value = mediaController.currentPosition
+                        innerState = InnerState.Paused
+                    }
+                    playbackState == STATE_READY &&
+                    atomicInnerState is InnerState.StartingPlayback &&
+                    stream.value?.type == StreamType.HLS_EVENT &&
+                    mediaController.currentPosition != (0).toLong() -> {
+                        mediaController.seekTo(0)
+                    }
+                    playbackState == STATE_READY &&
+                    atomicInnerState is InnerState.StartingPlayback -> {
+                        mediaController.play()
+                    }
                 }
             }
         }
