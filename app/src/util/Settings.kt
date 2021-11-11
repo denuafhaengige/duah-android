@@ -16,7 +16,7 @@ import android.content.pm.PackageInfo
 import android.content.pm.PackageManager.GET_META_DATA
 import android.net.Uri
 
-class Settings(private val context: Context) {
+class Settings(context: Context) {
 
     // MARK: Static
 
@@ -54,6 +54,7 @@ class Settings(private val context: Context) {
         get() = appInfo.metaData.getString(ShowHiddenContentKey) == "true"
 
     private val Context.dataStore: DataStore<Preferences> by preferencesDataStore("settings")
+    private val dataStore: DataStore<Preferences> = context.dataStore
     private val appPackageInfo: PackageInfo by lazy {
         val manager = context.packageManager
         return@lazy manager.getPackageInfo(context.packageName, 0)
@@ -74,13 +75,13 @@ class Settings(private val context: Context) {
     // MARK: Implementation
 
     private suspend fun dateForKey(key: Preferences.Key<Long>): Date? {
-        val datastore = context.dataStore.data.first()
-        val timestamp = datastore[key] ?: return null
+        val data = dataStore.data.first()
+        val timestamp = data[key] ?: return null
         return Date(timestamp)
     }
 
     private suspend fun setDateForKey(date: Date?, key: Preferences.Key<Long>) {
-        context.dataStore.edit { preferences ->
+        dataStore.edit { preferences ->
             if (date == null) {
                 preferences.remove(key)
                 return@edit
@@ -91,8 +92,8 @@ class Settings(private val context: Context) {
     }
 
     private suspend fun versionForKey(key: Preferences.Key<String>): Version? {
-        val datastore = context.dataStore.data.first()
-        val string = datastore[key] ?: return null
+        val data = dataStore.data.first()
+        val string = data[key] ?: return null
         return try {
             Version(string, true)
         } catch (e: Throwable) {
@@ -102,7 +103,7 @@ class Settings(private val context: Context) {
     }
 
     private suspend fun setVersionForKey(version: Version?, key: Preferences.Key<String>) {
-        context.dataStore.edit { preferences ->
+        dataStore.edit { preferences ->
             if (version == null) {
                 preferences.remove(key)
                 return@edit

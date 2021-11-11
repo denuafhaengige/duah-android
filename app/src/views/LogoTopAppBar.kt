@@ -2,6 +2,7 @@ package com.denuafhaengige.duahandroid.views
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -11,17 +12,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.layout.HorizontalAlignmentLine
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.zIndex
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.google.accompanist.insets.navigationBarsHeight
 import com.google.accompanist.insets.statusBarsHeight
-import com.denuafhaengige.duahandroid.AppViewModel
 import com.denuafhaengige.duahandroid.R
 import com.denuafhaengige.duahandroid.models.ChannelWithCurrentBroadcast
 import com.denuafhaengige.duahandroid.player.Playable
@@ -36,19 +29,22 @@ data class LogoTopAppBarModel(
 @Composable
 fun LogoTopAppBar(model: LogoTopAppBarModel) {
 
+    val logoPainter =
+        if (isSystemInDarkTheme()) painterResource(id = R.drawable.round_icon_black_on_white)
+        else painterResource(id = R.drawable.round_icon_white_on_black)
+
     Column {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .statusBarsHeight()
-                .background(color = MaterialTheme.colors.surface),
+                .background(color = MaterialTheme.colors.background),
         )
         Box(
             modifier = Modifier
-                .shadow(2.dp, clip = false)
         ) {
             TopAppBar(
-                backgroundColor = Color.White,
+                backgroundColor = MaterialTheme.colors.background,
             ) {
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -67,10 +63,11 @@ fun LogoTopAppBar(model: LogoTopAppBarModel) {
                 }
             }
             Image(
-                painter = painterResource(id = R.drawable.round_icon),
+                painter = logoPainter,
                 contentDescription = null, // decorative element
                 modifier = Modifier
-                    .scale(1.5F)
+                    .size(56.dp)
+                    .scale(1.2F)
                     .align(alignment = Alignment.Center)
             )
         }

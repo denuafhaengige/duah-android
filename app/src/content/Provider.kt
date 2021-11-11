@@ -1,6 +1,7 @@
 package com.denuafhaengige.duahandroid.content
 
 import android.app.Service
+import android.content.Context
 import android.content.Intent
 import android.os.IBinder
 import com.squareup.moshi.JsonAdapter
@@ -16,12 +17,12 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import java.util.*
 
-class ContentService: Service() {
+class ContentProvider(context: Context) {
 
     // MARK: Static
 
     companion object {
-        private val mutableInstance = MutableStateFlow<ContentService?>(null)
+        private val mutableInstance = MutableStateFlow<ContentProvider?>(null)
         val instance = mutableInstance.asStateFlow()
     }
 
@@ -57,40 +58,25 @@ class ContentService: Service() {
     val liveChannel = _liveChannel.asStateFlow()
 
     private val scope = CoroutineScope(Dispatchers.Default)
-    private lateinit var contentLoader: ContentLoader
-    lateinit var contentStore: ContentStore
-    private lateinit var settings: Settings
-    private lateinit var moshi: Moshi
+    private val contentLoader: ContentLoader
+    val contentStore: ContentStore
+    private val settings: Settings
+        get() = Application.settings
+    private val moshi: Moshi
+        get() = Application.moshi
 
     // MARK: Service
 
-    override fun onCreate() {
-        Log.debug("ContentService | onCreate")
-        moshi = Application.moshi
+    init {
+        Log.debug("ContentProvider | onCreate")
         mutableInstance.value = this
-        settings = Settings(context = applicationContext)
-        contentStore = ContentStore(context = this)
+        contentStore = ContentStore(context = context)
         contentLoader = ContentLoader(
             store = contentStore,
             settings = settings,
             moshi = moshi
         )
-        super.onCreate()
-    }
-
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        Log.debug("ContentService | onStartCommand")
         scope.launch { start() }
-        return super.onStartCommand(intent, flags, startId)
-    }
-
-    override fun onDestroy() {
-        Log.debug("ContentService | onDestroy")
-        super.onDestroy()
-    }
-
-    override fun onBind(p0: Intent?): IBinder? {
-        return null
     }
 
     // MARK: Wiring
@@ -99,7 +85,7 @@ class ContentService: Service() {
     private suspend fun wireContentStore() {
         scope.launch {
             contentStore.state.collect { contentStoreState ->
-                Log.debug("ContentService | contentStore.state.collect | state: $contentStoreState")
+                Log.debug("ContentProvider | contentStore.state.collect | state: $contentStoreState")
                 when (contentStoreState) {
                     ContentStore.State.READY -> contentStoreReady()
                     else -> return@collect
@@ -108,7 +94,7 @@ class ContentService: Service() {
         }
         scope.launch {
             contentStore.eventFlow.collect { event ->
-                Log.debug("ContentService | contentStore.eventFlow.collect | event: $event")
+                Log.debug("ContentProvider | contentStore.eventFlow.collect | event: $event")
             }
         }
         scope.launch {
@@ -153,7 +139,7 @@ class ContentService: Service() {
     private suspend fun wireContentLoader() {
         scope.launch {
             contentLoader.state.collect { contentLoaderState ->
-                Log.debug("ContentService | contentLoader.state.collect | state: $contentLoaderState")
+                Log.debug("ContentProvider | contentLoader.state.collect | state: $contentLoaderState")
                 if (_state.value in listOf(State.PreparingContent, State.ReadyToServe)) {
                     return@collect
                 }
@@ -188,8 +174,8 @@ class ContentService: Service() {
         try {
             contentStore.start()
         } catch (e: Throwable) {
-            Log.debug("ContentService | start | failed starting database with exception: $e")
-            Log.debug("ContentService | start | resetting, then retrying")
+            Log.debug("ContentProvider | start | failed starting database with exception: $e")
+            Log.debug("ContentProvider | start | resetting, then retrying")
             resetDatabase()
             contentStore.start()
         }

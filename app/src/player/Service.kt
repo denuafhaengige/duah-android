@@ -13,10 +13,11 @@ import androidx.media3.exoplayer.util.EventLogger
 import androidx.media3.session.LibraryResult
 import androidx.media3.session.MediaLibraryService
 import androidx.media3.session.MediaSession
+import com.denuafhaengige.duahandroid.Application
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
 import com.denuafhaengige.duahandroid.util.Log
-import com.denuafhaengige.duahandroid.content.ContentService
+import com.denuafhaengige.duahandroid.content.ContentProvider
 import com.denuafhaengige.duahandroid.util.Settings
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.filterNotNull
@@ -32,10 +33,8 @@ class PlayerService: Player.Listener, MediaLibraryService() {
 
     private val scope = CoroutineScope(Dispatchers.Main)
     private lateinit var settings: Settings
-
-    private lateinit var _contentService: WeakReference<ContentService>
-    private val contentService
-        get() = _contentService.get()
+    private val contentProvider
+        get() = Application.contentProvider
 
     // MARK: Service
 
@@ -43,7 +42,6 @@ class PlayerService: Player.Listener, MediaLibraryService() {
         Log.debug("PlayerService | onCreate")
         super.onCreate()
         settings = Settings(context = applicationContext)
-        wireContentService()
         wireMediaSession()
         Log.debug("PlayerService | onCreate | media session token: ${mediaSession.token}")
     }
@@ -93,18 +91,11 @@ class PlayerService: Player.Listener, MediaLibraryService() {
     // MARK: Logic
 
     private suspend fun mediaItemForMediaId(mediaId: String): MediaItem? {
-        val contentStore = contentService?.contentStore
-            ?: return null
         val mediaItemId = Playable.MediaItemId.forString(mediaId)
             ?: return null
-        val playable = Playable.forMediaItemId(mediaItemId, contentStore)
+        val playable = Playable.forMediaItemId(mediaItemId, contentProvider.contentStore)
             ?: return null
         return Media3Integration.mediaItemForPlayable(playable, settings)
-    }
-
-    private fun wireContentService() = scope.launch {
-        val serviceIstance = ContentService.instance.filterNotNull().first()
-        _contentService = WeakReference(serviceIstance)
     }
 
     @androidx.annotation.OptIn(UnstableApi::class)

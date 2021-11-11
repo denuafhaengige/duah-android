@@ -11,13 +11,14 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.airbnb.lottie.compose.LottieAnimation
-import com.airbnb.lottie.compose.LottieCompositionSpec
-import com.airbnb.lottie.compose.LottieConstants
-import com.airbnb.lottie.compose.rememberLottieComposition
+import com.airbnb.lottie.LottieProperty
+import com.airbnb.lottie.SimpleColorFilter
+import com.airbnb.lottie.compose.*
+import com.airbnb.lottie.model.KeyPath
 import com.google.accompanist.insets.navigationBarsPadding
 import com.denuafhaengige.duahandroid.AppState
 import com.denuafhaengige.duahandroid.AppViewModel
@@ -30,6 +31,24 @@ fun Loading(viewModel: AppViewModel) {
 
     val appState by viewModel.appState.observeAsState()
     val lottieComposition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.logo_animation_black))
+
+    val lottieDynamicProperties = rememberLottieDynamicProperties(
+        LottieDynamicProperty(
+            property = LottieProperty.COLOR,
+            keyPath = KeyPath("**"),
+            value = MaterialTheme.colors.onBackground.hashCode(),
+        ),
+        LottieDynamicProperty(
+            property = LottieProperty.STROKE_COLOR,
+            keyPath = KeyPath("**"),
+            value = MaterialTheme.colors.onBackground.hashCode(),
+        ),
+        LottieDynamicProperty(
+            property = LottieProperty.COLOR_FILTER,
+            keyPath = KeyPath("**"),
+            value = SimpleColorFilter(MaterialTheme.colors.onBackground.hashCode()),
+        )
+    )
 
     val loadingState = appState as? AppState.Loading
     val descriptorFunc = loadingState?.descriptor
@@ -49,6 +68,7 @@ fun Loading(viewModel: AppViewModel) {
         LottieAnimation(
             composition = lottieComposition,
             iterations = LottieConstants.IterateForever,
+            dynamicProperties = lottieDynamicProperties,
             modifier = Modifier
                 .size(180.dp)
                 .align(alignment = Alignment.Center)
@@ -67,7 +87,11 @@ fun Loading(viewModel: AppViewModel) {
                     progress = animatedProgress,
                     color = MaterialTheme.colors.onBackground
                 )
-                Text(text = descriptor, style = MaterialTheme.typography.caption)
+                Text(
+                    text = descriptor,
+                    style = MaterialTheme.typography.caption,
+                    color = MaterialTheme.colors.onBackground,
+                )
             }
         }
     }

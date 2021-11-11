@@ -4,10 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.denuafhaengige.duahandroid.content.ContentService
+import com.denuafhaengige.duahandroid.content.ContentProvider
 import com.github.michaelbull.result.*
-import com.denuafhaengige.duahandroid.models.BroadcastWithProgramAndEmployees
-import com.denuafhaengige.duahandroid.models.Channel
 import com.denuafhaengige.duahandroid.models.ChannelWithCurrentBroadcast
 import com.denuafhaengige.duahandroid.player.Playable
 import com.denuafhaengige.duahandroid.player.PlayableBroadcastFlow
@@ -21,12 +19,10 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.CoroutineScope.*
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.first
-import java.lang.ref.WeakReference
 
 class AppViewModel(
     val settings: Settings,
-    private val player: Player,
+    player: Player,
 ) : ViewModel() {
 
     // MARK: Types
@@ -47,9 +43,6 @@ class AppViewModel(
     // MARK: Props
 
     private val scope = CoroutineScope(Dispatchers.Main)
-    private lateinit var _contentService: WeakReference<ContentService>
-    val contentService
-        get() = _contentService.get()
     val playerViewModel = PlayerViewModel(player)
 
     // MARK: UI Fields
@@ -73,51 +66,47 @@ class AppViewModel(
     }
 
     private fun start() = scope.launch {
-        val serviceIstance = ContentService.instance.filterNotNull().first()
-        _contentService = WeakReference(serviceIstance)
-        wireContentService()
+        wireContentProvider()
     }
 
-    private suspend fun wireContentService() {
-        scope.launch {
-            contentService?.state?.collect {
-                _appState.value = AppState.from(it)
+    private suspend fun wireContentProvider() {
+        ContentProvider.instance.filterNotNull().collect { contentProvider ->
+
+            scope.launch {
+                contentProvider.state.collect {
+                    _appState.value = AppState.from(it)
+                }
             }
-        }
-        scope.launch {
-            contentService?.featuredContent?.collect { featured ->
-                _featuredContent.value = featured.map { LiveFeatured(it) }
+
+            scope.launch {
+                contentProvider.featuredContent.collect { featured ->
+                    _featuredContent.value = featured.map { LiveFeatured(it) }
+                }
             }
-        }
-        scope.launch {
-            contentService?.latestBroadcasts?.collect { broadcasts ->
-                _latestBroadcasts.value = broadcasts.mapNotNull {
-                    val broadcast = it.flow.value ?: return@mapNotNull null
-                    val store = contentService?.contentStore ?: return@mapNotNull null
-                    LivePlayableBroadcast(
-                        playableBroadcastFlow = PlayableBroadcastFlow(
-                            playable = Playable.Broadcast(broadcast),
-                            store = store
+
+            scope.launch {
+                contentProvider.latestBroadcasts.collect { broadcasts ->
+                    _latestBroadcasts.value = broadcasts.mapNotNull {
+                        val broadcast = it.flow.value ?: return@mapNotNull null
+                        LivePlayableBroadcast(
+                            playableBroadcastFlow = PlayableBroadcastFlow(
+                                playable = Playable.Broadcast(broadcast),
+                                store = contentProvider.contentStore
+                            )
                         )
-                    )
+                    }
+                }
+            }
+
+            scope.launch {
+                contentProvider.liveChannel.collect { channel ->
+                    _liveChannel.value =
+                        if (channel == null) null
+                        else LiveEntity(channel)
                 }
             }
         }
-        scope.launch {
-            contentService?.liveChannel?.collect { channel ->
-                if (channel == null) {
-                    _liveChannel.value = null
-                    return@collect
-                }
-                _liveChannel.value = LiveEntity(channel)
-            }
-        }
-    }
 
-    // MARK: Logic
-
-    private suspend fun getLiveChannel(): ChannelWithCurrentBroadcast? {
-        return contentService?.contentStore?.database?.channelDao()?.findByIdentifier("live")
     }
 
 }

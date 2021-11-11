@@ -13,6 +13,7 @@ import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.statusBarsHeight
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.denuafhaengige.duahandroid.AppViewModel
+import com.denuafhaengige.duahandroid.Application
 import com.denuafhaengige.duahandroid.models.BroadcastFetcher
 
 @OptIn(ExperimentalPagerApi::class)
@@ -65,14 +66,12 @@ fun Home(viewModel: AppViewModel) {
                 )
             },
         )
-        viewModel.contentService?.contentStore?.let { contentStore ->
-            liveChannel?.let { liveChannel ->
-                DynamicLargePlayer(
-                    playerViewModel = viewModel.playerViewModel,
-                    liveChannel = liveChannel,
-                    broadcastFetcher = BroadcastFetcher(store = contentStore)
-                )
-            }
+        liveChannel?.let { liveChannel ->
+            DynamicLargePlayer(
+                playerViewModel = viewModel.playerViewModel,
+                liveChannel = liveChannel,
+                broadcastFetcher = BroadcastFetcher(store = Application.contentProvider.contentStore)
+            )
         }
     }
     

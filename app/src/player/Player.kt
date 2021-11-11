@@ -10,7 +10,8 @@ import androidx.media3.common.Timeline
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
-import com.denuafhaengige.duahandroid.content.ContentService
+import com.denuafhaengige.duahandroid.Application
+import com.denuafhaengige.duahandroid.content.ContentProvider
 import com.denuafhaengige.duahandroid.util.Log
 import com.denuafhaengige.duahandroid.util.Settings
 import kotlinx.coroutines.*
@@ -98,9 +99,8 @@ class Player (private val context: Context, private val settings: Settings) {
         }
     }
 
-    private lateinit var _contentService: WeakReference<ContentService>
-    private val contentService
-        get() = _contentService.get()
+   private val contentProvider
+        get() = Application.contentProvider
 
     private val scope = CoroutineScope(Dispatchers.Main)
     private val backgroundScope = CoroutineScope(Dispatchers.Default)
@@ -140,9 +140,8 @@ class Player (private val context: Context, private val settings: Settings) {
 
     fun play(playable: Playable) = scope.launch {
         val stream = playable.preferredStreamWithSettings(settings) ?: return@launch
-        val contentStore = contentService?.contentStore ?: return@launch
         val mediaItem = Media3Integration.mediaItemForPlayable(playable, settings) ?: return@launch
-        _playable.value = PlayableFlow(playable, contentStore)
+        _playable.value = PlayableFlow(playable, contentProvider.contentStore)
         _stream.value = stream
         mediaController.setMediaItem(mediaItem)
         innerPlay()
@@ -185,7 +184,6 @@ class Player (private val context: Context, private val settings: Settings) {
 
     private fun start() = scope.launch {
         scope.launch { wireMediaController() }
-        scope.launch { wireContentService() }
     }
 
     // MARK: MediaController
@@ -310,11 +308,6 @@ class Player (private val context: Context, private val settings: Settings) {
         _connected.value = true
         innerState = InnerState.Idle
         // TODO: Derive state because Player class might be instantiated while media session is already ongoing?
-    }
-
-    private fun wireContentService() = scope.launch {
-        val serviceIstance = ContentService.instance.filterNotNull().first()
-        _contentService = WeakReference(serviceIstance)
     }
 
 }

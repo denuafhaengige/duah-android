@@ -1,13 +1,11 @@
 package com.denuafhaengige.duahandroid
 
-import android.content.*
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.ViewModelProvider
 import com.denuafhaengige.duahandroid.player.*
-import com.denuafhaengige.duahandroid.content.ContentService
 import com.denuafhaengige.duahandroid.theming.DuahTheme
 import com.denuafhaengige.duahandroid.util.Log
 import com.denuafhaengige.duahandroid.util.Settings
@@ -24,9 +22,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
-        startService(Intent(this, ContentService::class.java))
-
-        settings = Settings(context = applicationContext)
+        settings = Application.settings
         player = Player(context = applicationContext, settings)
 
         appViewModel = ViewModelProvider(this, AppViewModel.Factory(settings, player))

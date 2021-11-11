@@ -85,6 +85,15 @@ class ContentLoader(val store: ContentStore, val settings: Settings, val moshi: 
         _state.value = State.Starting
     }
 
+    fun stop() {
+        lifecycle.onNext(Lifecycle.State.Destroyed)
+        for (disposable in disposables) {
+            disposable.dispose()
+        }
+        disposables.removeAll { true }
+        _state.value = State.Paused
+    }
+
     // MARK: State Machine
 
     private suspend fun runLoop() {
