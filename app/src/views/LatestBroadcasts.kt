@@ -1,7 +1,7 @@
 package com.denuafhaengige.duahandroid.views
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -12,24 +12,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.unit.dp
-import com.denuafhaengige.duahandroid.AppViewModel
+import androidx.navigation.NavController
 import com.denuafhaengige.duahandroid.R
-import com.denuafhaengige.duahandroid.models.Broadcast
-import com.denuafhaengige.duahandroid.models.BroadcastWithProgramAndEmployees
 import com.denuafhaengige.duahandroid.player.PlayerViewModel
-import com.denuafhaengige.duahandroid.util.LiveEntity
 import com.denuafhaengige.duahandroid.util.LivePlayableBroadcast
 import com.denuafhaengige.duahandroid.util.capitalizeWords
 
 @Composable
 fun LatestBroadcasts(
     playableBroadcasts: List<LivePlayableBroadcast>,
-    playerViewModel: PlayerViewModel
+    playerViewModel: PlayerViewModel,
+    navController: NavController,
 ) {
 
     val lazyRowState = rememberLazyListState()
@@ -51,38 +46,46 @@ fun LatestBroadcasts(
             contentPadding = PaddingValues(start = 20.dp, end = 20.dp, top = 20.dp, bottom = 30.dp),
         ) {
             items(items = playableBroadcasts) { playableBroadcast ->
-                LatestBroadcastsItem(playableBroadcast, playerViewModel)
+                DynamicLatestBroadcastsItem(playableBroadcast, playerViewModel, navController)
             }
         }
     }
 }
 
 @Composable
-fun LatestBroadcastsItem(
+fun DynamicLatestBroadcastsItem(
     livePlayableBroadcast: LivePlayableBroadcast,
-    playerViewModel: PlayerViewModel
+    playerViewModel: PlayerViewModel,
+    navController: NavController,
 ) {
 
-    val playableBroadcast by livePlayableBroadcast.livePlayableBroadcast.observeAsState()
+    val observedPlayableBroadcast by livePlayableBroadcast.livePlayableBroadcast.observeAsState()
+    val playableBroadcast = observedPlayableBroadcast ?: return
 
     val metaTitle =
-        playableBroadcast?.broadcast?.metaTitle ?:
+        playableBroadcast.broadcast.metaTitle ?:
         stringResource(id = R.string.fallback_program_title).capitalizeWords()
 
     Column(
         modifier = Modifier
             .width(150.dp)
-            .height(250.dp),
+            .height(250.dp)
+            .clickable {
+                navController.navigate(
+                    route = NavigationRouteDest.Broadcast(playableBroadcast.id).destRoute
+                )
+            },
     ) {
-        playableBroadcast?.let {
-            BroadcastVisual(
-                playableBroadcast = it,
-                modifier = Modifier
-                    .size(150.dp)
-                    .padding(bottom = 10.dp),
-                hostPhotoDiameter = 40.dp,
-                style = BroadcastVisualStyle.SQUARE,
-                playerViewModel,
+        BroadcastVisual(
+            broadcast = playableBroadcast.broadcast,
+            style = BroadcastVisualStyle.SQUARE,
+            modifier = Modifier
+                .padding(bottom = 10.dp)
+                .size(150.dp),
+        ) {
+            DynamicBroadcastVisualPlayButton(
+                playerViewModel = playerViewModel,
+                broadcast = playableBroadcast.broadcast,
             )
         }
         Text(
@@ -91,8 +94,14 @@ fun LatestBroadcastsItem(
             color = MaterialTheme.colors.primary,
             modifier = Modifier.padding(bottom = 5.dp)
         )
-        playableBroadcast?.let {
-            Text(text = it.broadcast.title, style = MaterialTheme.typography.subtitle2)
-        }
+        Text(
+            text = playableBroadcast.broadcast.title,
+            style = MaterialTheme.typography.subtitle2,
+        )
     }
+}
+
+@Composable
+fun LatestBroadcastsItem() {
+
 }

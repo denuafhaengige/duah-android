@@ -14,7 +14,7 @@ import com.denuafhaengige.duahandroid.models.Program as ProgramEntity
 class FeaturedFlow(featured: Featured, store: ContentStore) {
 
     private val _flow = MutableStateFlow(featured)
-    private val entityFlow: Any
+    private val entityFlow: EntityFlow<*>
     private val scope = CoroutineScope(Dispatchers.IO)
     val flow = _flow.asStateFlow()
 
