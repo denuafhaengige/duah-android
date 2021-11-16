@@ -4,9 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.airbnb.lottie.animation.content.Content
 import com.denuafhaengige.duahandroid.content.ContentProvider
+import com.denuafhaengige.duahandroid.models.BroadcastWithProgramAndEmployees
 import com.github.michaelbull.result.*
 import com.denuafhaengige.duahandroid.models.ChannelWithCurrentBroadcast
+import com.denuafhaengige.duahandroid.models.Program
 import com.denuafhaengige.duahandroid.player.Playable
 import com.denuafhaengige.duahandroid.player.PlayableBroadcastFlow
 import com.denuafhaengige.duahandroid.player.Player
@@ -19,6 +22,11 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.CoroutineScope.*
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filterNotNull
+
+data class BroadcastsFilter(
+    val programIds: List<Int>? = null,
+    val hostIds: List<Int>? = null,
+)
 
 class AppViewModel(
     val settings: Settings,
@@ -58,6 +66,36 @@ class AppViewModel(
 
     private val _liveChannel = MutableLiveData<LiveEntity<ChannelWithCurrentBroadcast>?>(null)
     val liveChannel: LiveData<LiveEntity<ChannelWithCurrentBroadcast>?> = _liveChannel
+
+    private val _programs = MutableLiveData<List<LiveEntity<Program>>>(emptyList())
+    val programs: LiveData<List<LiveEntity<Program>>> = _programs
+
+    // MARK: Functions
+
+    suspend fun broadcasts(
+        filter: BroadcastsFilter? = null,
+    ): List<BroadcastWithProgramAndEmployees> {
+        val dao = Application.contentProvider.contentStore.database.broadcastDao()
+        val allRelevantBroadcasts = dao.getAll().filter {
+            !it.broadcast.hidden && it.program != null && it.broadcast.broadcasted != null
+        }
+        val allOrderedBroadcasts = allRelevantBroadcasts.sortedByDescending { it.broadcast.broadcasted }
+        if (filter == null) {
+            return allOrderedBroadcasts
+        }
+        val filteredResult = allOrderedBroadcasts.toMutableList()
+        filteredResult.removeIf { broadcast ->
+            val filterByHosts =
+                filter.hostIds != null &&
+                !broadcast.employees.map { it.id }.containsAll(filter.hostIds)
+            val filterByPrograms =
+                filter.programIds != null &&
+                broadcast.program != null &&
+                !filter.programIds.contains(broadcast.program.id)
+            return@removeIf filterByHosts || filterByPrograms
+        }
+        return filteredResult
+    }
 
     // Init
 
@@ -103,6 +141,12 @@ class AppViewModel(
                     _liveChannel.value =
                         if (channel == null) null
                         else LiveEntity(channel)
+                }
+            }
+
+            scope.launch {
+                contentProvider.programs.collect { programs ->
+                    _programs.value = programs.map { LiveEntity(it) }
                 }
             }
         }

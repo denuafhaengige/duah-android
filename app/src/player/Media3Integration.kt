@@ -1,13 +1,40 @@
 package com.denuafhaengige.duahandroid.player
 
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
+import android.net.Uri
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.Player
+import coil.ImageLoader
+import coil.request.ErrorResult
+import coil.request.ImageRequest
+import coil.request.SuccessResult
+import com.denuafhaengige.duahandroid.Application
 import com.denuafhaengige.duahandroid.util.Settings
+import java.io.ByteArrayOutputStream
 
 object Media3Integration {
 
-    private fun mediaMetaDataForPlayable(playable: Playable): MediaMetadata {
+    private suspend fun fetchBitmap(uri: Uri): Bitmap? {
+        val context = Application.context.get() ?: return null
+        val loader = ImageLoader(context)
+        val request = ImageRequest.Builder(context)
+            .data(uri)
+            .build()
+        return when (val result = loader.execute(request)) {
+            is SuccessResult -> {
+                val drawable = result.drawable
+                if (drawable is BitmapDrawable) {
+                    return drawable.bitmap
+                }
+                return null
+            }
+            is ErrorResult -> null
+        }
+    }
+
+    private suspend fun mediaMetaDataForPlayable(playable: Playable, fetchArtwork: Boolean = false): MediaMetadata {
         val metadataBuilder = MediaMetadata.Builder()
         when (playable) {
             is Playable.Broadcast -> metadataBuilder
@@ -19,10 +46,19 @@ object Media3Integration {
                 .setTitle(playable.channel.title)
                 .setArtworkUri(playable.channel.squareImageUri)
         }
+        if (fetchArtwork) {
+            val coverArtwork = playable.squareImageUri?.let {
+                val bitmap = fetchBitmap(it) ?: return@let null
+                val stream = ByteArrayOutputStream()
+                bitmap.compress(Bitmap.CompressFormat.JPEG,10, stream)
+                return@let stream.toByteArray()
+            }
+            metadataBuilder.setArtworkData(coverArtwork, MediaMetadata.PICTURE_TYPE_FRONT_COVER)
+        }
         return metadataBuilder.build()
     }
 
-    fun mediaItemForPlayable(playable: Playable, settings: Settings): MediaItem? {
+    suspend fun mediaItemForPlayable(playable: Playable, settings: Settings, fetchArtwork: Boolean = false): MediaItem? {
         val stream = playable.preferredStreamWithSettings(settings) ?: return null
         val metaData = mediaMetaDataForPlayable(playable)
         return MediaItem.Builder()

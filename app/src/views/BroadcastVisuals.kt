@@ -70,12 +70,13 @@ fun BroadcastVisual(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit = {},
 ) {
-    val imageUri = when (style) { // TODO: Use default image
-        BroadcastVisualStyle.WIDE -> broadcast.wideImageUri
-        BroadcastVisualStyle.SQUARE -> broadcast.squareImageUri
-    }
+    
     val date = broadcast.broadcast.broadcasted
     val hosts = broadcast.employees
+    val imageVariant = when (style) {
+        BroadcastVisualStyle.SQUARE -> ContentImageVariant.SQUARE
+        BroadcastVisualStyle.WIDE -> ContentImageVariant.WIDE
+    }
 
     BoxWithConstraints(modifier) {
 
@@ -84,16 +85,14 @@ fun BroadcastVisual(
         val hostPhotoDiameter = maxHeight.div(4)
         val hostPhotosSpacing = maxHeight.div(24)
 
-        imageUri?.let {
-            Image(
-                painter = rememberImagePainter(it),
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .fillMaxWidth()
-            )
-        }
+        Image(
+            painter = imagePainterForContent(content = broadcast, variant = imageVariant),
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .fillMaxHeight()
+                .fillMaxWidth()
+        )
         Column(
             modifier = Modifier
                 .fillMaxSize(),

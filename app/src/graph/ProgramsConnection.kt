@@ -13,6 +13,7 @@ data class GraphProgramsConnectionRequest(
     override val schemaPath = "programs"
     override val queryProperties = """
         id,
+        identifier,
         title,
         hostEmployees {
             id,

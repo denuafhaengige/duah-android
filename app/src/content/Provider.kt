@@ -57,6 +57,9 @@ class ContentProvider(context: Context) {
     private val _liveChannel = MutableStateFlow<EntityFlow<ChannelWithCurrentBroadcast>?>(null)
     val liveChannel = _liveChannel.asStateFlow()
 
+    private val _programs = MutableStateFlow<List<EntityFlow<Program>>>(emptyList())
+    val programs = _programs.asStateFlow()
+
     private val scope = CoroutineScope(Dispatchers.Default)
     private val contentLoader: ContentLoader
     val contentStore: ContentStore
@@ -134,6 +137,16 @@ class ContentProvider(context: Context) {
                     }
                 }
         }
+        scope.launch {
+            contentStore.eventFlow
+                .takeWhile { state.value is State.ReadyToServe }
+                .filterIsInstance<ContentStore.Event.Loaded>()
+                .flatMapMerge { it.operations.asFlow() }
+                .filter { it.entityType == EntityType.PROGRAM }
+                .collect {
+                    refreshPrograms()
+                }
+        }
     }
 
     private suspend fun wireContentLoader() {
@@ -157,6 +170,7 @@ class ContentProvider(context: Context) {
                 refreshFeaturedContent()
                 refreshLatestBroadcasts()
                 refreshLiveChannel()
+                refreshPrograms()
                 _state.value = State.ReadyToServe
             }
         }
@@ -289,6 +303,48 @@ class ContentProvider(context: Context) {
             fetcher = ChannelFetcher(store = contentStore),
             contentStoreEventFlow = contentStore.eventFlow,
         )
+    }
+
+    private suspend fun refreshPrograms() {
+        val allPrograms = contentStore.database.programDao().getAll()
+        val allNonHiddenPrograms = allPrograms.filter { !it.hidden }
+        val hardcodedSort = listOf(
+            "enuafhaengigmorgen",
+            "ringhvisjegtagerfejl",
+            "denuundgaaelige",
+            "underudvikling",
+            "stramdiskurs2",
+            "classic",
+            "enuafhaengigsommer",
+            "andersstjernholmpodcast",
+        )
+        val sorted = allNonHiddenPrograms.sortedWith(Comparator { lhs, rhs ->
+                val lhsIndex = lhs.identifier?.let { identifier ->
+                    hardcodedSort.indexOf(identifier).takeUnless { it == -1 }
+                }
+                val rhsIndex = rhs.identifier?.let { identifier ->
+                    hardcodedSort.indexOf(identifier).takeUnless { it == -1 }
+                }
+                when {
+                    lhsIndex == null && rhsIndex == null ->
+                        return@Comparator 0
+                    lhsIndex != null && rhsIndex == null ->
+                        return@Comparator -1
+                    lhsIndex == null && rhsIndex != null ->
+                        return@Comparator 1
+                    lhsIndex != null && rhsIndex != null ->
+                        return@Comparator lhsIndex - rhsIndex
+                    else -> throw Throwable("Shut up")
+                }
+            }
+        )
+        _programs.value = sorted.map {
+            EntityFlow(
+                entity = it,
+                fetcher = ProgramFetcher(store = contentStore),
+                contentStoreEventFlow = contentStore.eventFlow,
+            )
+        }
     }
 
 }

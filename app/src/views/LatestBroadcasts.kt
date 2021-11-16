@@ -11,6 +11,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -29,21 +30,23 @@ fun LatestBroadcasts(
 
     val lazyRowState = rememberLazyListState()
 
-    Column(
+    ContentRow(
+        title = casedStringResource(id = R.string.title_latest_broadcasts),
+        titleFarRightItem = {
+            NavigationButton(
+                text = stringResource(id = R.string.all).uppercase(),
+                action = { navController.navigate(NavigationRouteDest.BroadcastsList().destRoute) },
+            )
+        },
         modifier = Modifier
-            .fillMaxWidth()
             .background(MaterialTheme.colors.surface)
+            .padding(vertical = ContentDimensions.contentRowVerticalPadding)
+            .fillMaxWidth(),
     ) {
-        Text(
-            text = stringResource(id = R.string.title_latest_broadcasts).replaceFirstChar { it.titlecase() },
-            style = MaterialTheme.typography.h1,
-            modifier = Modifier
-                .padding(start = 20.dp, end = 20.dp, top = 25.dp, bottom = 0.dp),
-        )
         LazyRow(
             state = lazyRowState,
-            horizontalArrangement = Arrangement.spacedBy(10.dp),
-            contentPadding = PaddingValues(start = 20.dp, end = 20.dp, top = 20.dp, bottom = 30.dp),
+            horizontalArrangement = Arrangement.spacedBy(20.dp),
+            contentPadding = PaddingValues(horizontal = 20.dp),
         ) {
             items(items = playableBroadcasts) { playableBroadcast ->
                 DynamicLatestBroadcastsItem(playableBroadcast, playerViewModel, navController)
@@ -62,17 +65,13 @@ fun DynamicLatestBroadcastsItem(
     val observedPlayableBroadcast by livePlayableBroadcast.livePlayableBroadcast.observeAsState()
     val playableBroadcast = observedPlayableBroadcast ?: return
 
-    val metaTitle =
-        playableBroadcast.broadcast.metaTitle ?:
-        stringResource(id = R.string.fallback_program_title).capitalizeWords()
-
     Column(
         modifier = Modifier
-            .width(150.dp)
+            .width(ContentDimensions.squareBannerSize)
             .height(250.dp)
             .clickable {
                 navController.navigate(
-                    route = NavigationRouteDest.Broadcast(playableBroadcast.id).destRoute
+                    route = NavigationRouteDest.Broadcast(playableBroadcast).destRoute
                 )
             },
     ) {
@@ -81,23 +80,18 @@ fun DynamicLatestBroadcastsItem(
             style = BroadcastVisualStyle.SQUARE,
             modifier = Modifier
                 .padding(bottom = 10.dp)
-                .size(150.dp),
+                .size(ContentDimensions.squareBannerSize),
         ) {
             DynamicBroadcastVisualPlayButton(
                 playerViewModel = playerViewModel,
                 broadcast = playableBroadcast.broadcast,
             )
         }
-        Text(
-            text = metaTitle,
-            style = MaterialTheme.typography.caption,
-            color = MaterialTheme.colors.primary,
-            modifier = Modifier.padding(bottom = 5.dp)
+        MetaTitleTextForContent(
+            content = playableBroadcast,
+            modifier = Modifier.padding(bottom = 5.dp),
         )
-        Text(
-            text = playableBroadcast.broadcast.title,
-            style = MaterialTheme.typography.subtitle2,
-        )
+        SmallTitleTextForContent(content = playableBroadcast)
     }
 }
 

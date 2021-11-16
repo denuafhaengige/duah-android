@@ -26,6 +26,7 @@ fun Home(viewModel: AppViewModel, navController: NavController) {
 
     val featuredContent by viewModel.featuredContent.observeAsState()
     val latestBroadcasts by viewModel.latestBroadcasts.observeAsState()
+    val programs by viewModel.programs.observeAsState()
     val scrollState = rememberScrollState()
 
     Column(
@@ -41,10 +42,18 @@ fun Home(viewModel: AppViewModel, navController: NavController) {
                 navController = navController,
             )
         }
+
         latestBroadcasts?.let {
             LatestBroadcasts(
                 playableBroadcasts = it,
                 playerViewModel = viewModel.playerViewModel,
+                navController = navController,
+            )
+        }
+
+        programs?.let {
+            DynamicProgramsContentRow(
+                programs = it,
                 navController = navController,
             )
         }

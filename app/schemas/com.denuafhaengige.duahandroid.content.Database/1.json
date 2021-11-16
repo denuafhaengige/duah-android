@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "6c03a0797af0e0436d43ac7ba3defb0d",
+    "identityHash": "dea0b36384ea0e56efe8a9ce4578d44d",
     "entities": [
       {
         "tableName": "Broadcast",
@@ -384,13 +384,19 @@
       },
       {
         "tableName": "Program",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `title` TEXT NOT NULL, `description` TEXT, `hidden` INTEGER NOT NULL, `square_image_file_url` TEXT, `square_image_file_mime_type` TEXT, `square_image_file_type` TEXT, `square_image_file_path` TEXT, `wide_image_file_url` TEXT, `wide_image_file_mime_type` TEXT, `wide_image_file_type` TEXT, `wide_image_file_path` TEXT, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `identifier` TEXT, `title` TEXT NOT NULL, `description` TEXT, `hidden` INTEGER NOT NULL, `square_image_file_url` TEXT, `square_image_file_mime_type` TEXT, `square_image_file_type` TEXT, `square_image_file_path` TEXT, `wide_image_file_url` TEXT, `wide_image_file_mime_type` TEXT, `wide_image_file_type` TEXT, `wide_image_file_path` TEXT, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "identifier",
+            "columnName": "identifier",
+            "affinity": "TEXT",
+            "notNull": false
           },
           {
             "fieldPath": "title",
@@ -548,7 +554,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '6c03a0797af0e0436d43ac7ba3defb0d')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'dea0b36384ea0e56efe8a9ce4578d44d')"
     ]
   }
 }

@@ -51,7 +51,7 @@ fun DynamicPlaybackButton(
     playerViewModel: PlayerViewModel,
     playable: Playable,
     style: PlaybackButtonStyle,
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
 ) {
     val observedPlayerState by playerViewModel.state.observeAsState()
     val observedLivePlayerPlayable by playerViewModel.playable.observeAsState()
@@ -183,22 +183,27 @@ private fun PlaybackCircleButton(variant: PlaybackButtonVariant, modifier: Modif
 }
 
 @Composable
-private fun PlaybackLiveButton(variant: PlaybackButtonVariant, modifier: Modifier, action: () -> Unit) {
+private fun PlaybackLiveButton(
+    variant: PlaybackButtonVariant,
+    modifier: Modifier = Modifier,
+    action: () -> Unit
+) {
 
     val colors = ButtonDefaults.buttonColors(
-        backgroundColor = RedColor,
-        contentColor = Color.White,
-        disabledBackgroundColor = RedColor,
-        disabledContentColor = Color.White,
+        backgroundColor = MaterialTheme.colors.onBackground,
+        contentColor = MaterialTheme.colors.background,
+        disabledBackgroundColor = MaterialTheme.colors.onBackground,
+        disabledContentColor = MaterialTheme.colors.background,
     )
 
     Button(
         onClick = action,
-        shape = RoundedCornerShape(20.dp),
+        shape = RoundedCornerShape(percent = 50),
         contentPadding = PaddingValues(0.dp),
         colors = colors,
         enabled = variant != PlaybackButtonVariant.LOADING,
-        modifier = modifier,
+        modifier = modifier
+            .size(width = 76.dp, height = 30.dp),
     ) {
         when (variant) {
             PlaybackButtonVariant.PLAY -> {
@@ -206,7 +211,7 @@ private fun PlaybackLiveButton(variant: PlaybackButtonVariant, modifier: Modifie
                     painter = painterResource(id = R.drawable.ic_play),
                     contentDescription = descriptionForVariant(variant),
                     modifier = Modifier
-                        .fillMaxHeight(.35F)
+                        .fillMaxHeight(.45F)
                         .aspectRatio(1F),
                 )
                 Spacer(modifier = Modifier.fillMaxWidth(.1F))
@@ -216,7 +221,7 @@ private fun PlaybackLiveButton(variant: PlaybackButtonVariant, modifier: Modifie
                     painter = painterResource(id = R.drawable.ic_pause),
                     contentDescription = descriptionForVariant(variant),
                     modifier = Modifier
-                        .fillMaxHeight(.35F)
+                        .fillMaxHeight(.45F)
                         .aspectRatio(1F),
                 )
                 Spacer(modifier = Modifier.fillMaxWidth(.1F))
@@ -226,19 +231,19 @@ private fun PlaybackLiveButton(variant: PlaybackButtonVariant, modifier: Modifie
                 CircularProgressIndicator(
                     color = Color.White,
                     modifier = Modifier
-                        .fillMaxHeight(.52F)
+                        .fillMaxHeight(.68F)
                         .aspectRatio(1F)
                         .padding(4.dp),
                     strokeWidth = 2.dp,
                 )
-                Spacer(modifier = Modifier.fillMaxWidth(.055F))
+                Spacer(modifier = Modifier.fillMaxWidth(.04F))
             }
         }
         Text(
             maxLines = 1,
             style = TextStyle(
                 fontWeight = FontWeight.Bold,
-                fontSize = 12.sp,
+                fontSize = 14.sp,
             ),
             text = "LIVE",
             modifier = Modifier
@@ -251,7 +256,11 @@ private fun PlaybackLiveButton(variant: PlaybackButtonVariant, modifier: Modifie
 }
 
 @Composable
-private fun PlaybackPlainButton(variant: PlaybackButtonVariant, modifier: Modifier, action: () -> Unit) {
+private fun PlaybackPlainButton(
+    variant: PlaybackButtonVariant,
+    modifier: Modifier = Modifier,
+    action: () -> Unit,
+) {
 
     val colors = ButtonDefaults.buttonColors(
         backgroundColor = Color.Transparent,
@@ -371,8 +380,6 @@ private fun PlaybackButtonNewCirclePreviews() {
 @Composable
 private fun PlaybackButtonLivePreviews() {
     val action = ({})
-    val buttonModifier = Modifier
-        .size(width = 80.dp, height = 40.dp)
     Box(
         modifier = Modifier
             .background(Color.DarkGray)
@@ -384,9 +391,9 @@ private fun PlaybackButtonLivePreviews() {
             verticalArrangement = Arrangement.SpaceEvenly,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            PlaybackLiveButton(variant = PlaybackButtonVariant.PLAY, modifier = buttonModifier, action = action)
-            PlaybackLiveButton(variant = PlaybackButtonVariant.PAUSE, modifier = buttonModifier, action = action)
-            PlaybackLiveButton(variant = PlaybackButtonVariant.LOADING, modifier = buttonModifier, action = action)
+            PlaybackLiveButton(variant = PlaybackButtonVariant.PLAY, action = action)
+            PlaybackLiveButton(variant = PlaybackButtonVariant.PAUSE, action = action)
+            PlaybackLiveButton(variant = PlaybackButtonVariant.LOADING, action = action)
         }
     }
 }

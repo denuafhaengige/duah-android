@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.sp
 fun LiveLabel() {
     Row(
         modifier = Modifier
+            .padding(end = 8.dp)
             .size(width = 60.dp, height = 25.dp)
             .background(Color.LightGray, shape = RoundedCornerShape(30.dp)),
         verticalAlignment = Alignment.CenterVertically,

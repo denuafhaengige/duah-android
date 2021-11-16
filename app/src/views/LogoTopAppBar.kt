@@ -11,10 +11,14 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -23,6 +27,9 @@ import com.denuafhaengige.duahandroid.R
 import com.denuafhaengige.duahandroid.models.ChannelWithCurrentBroadcast
 import com.denuafhaengige.duahandroid.player.Playable
 import com.denuafhaengige.duahandroid.player.PlayerViewModel
+import com.denuafhaengige.duahandroid.theming.LighterDarkGrey
+import com.denuafhaengige.duahandroid.theming.VeryDarkerGrey
+import com.denuafhaengige.duahandroid.theming.VeryLighterGrey
 import com.denuafhaengige.duahandroid.util.LiveEntity
 
 @Composable
@@ -54,6 +61,8 @@ fun LogoTopAppBar(
     rightBarItem: @Composable () -> Unit,
 ) {
 
+    val borderColor = LighterDarkGrey
+
     val logoPainter =
         if (isSystemInDarkTheme()) painterResource(id = R.drawable.round_icon_black_on_white)
         else painterResource(id = R.drawable.round_icon_white_on_black)
@@ -63,18 +72,22 @@ fun LogoTopAppBar(
             modifier = Modifier
                 .fillMaxWidth()
                 .statusBarsHeight()
-                .background(color = MaterialTheme.colors.background),
+                .background(color = appBarBackgroundColor()),
         )
         Box(
             modifier = Modifier
         ) {
             TopAppBar(
-                backgroundColor = MaterialTheme.colors.background,
+                backgroundColor = appBarBackgroundColor(),
+                contentPadding = PaddingValues(0.dp),
             ) {
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .drawAppBarBorderBehind(AppBarBorderVariant.BOTTOM)
+                        .padding(horizontal = 8.dp),
                 ) {
                     leftBarItem()
                     Spacer(modifier = Modifier)
@@ -86,7 +99,7 @@ fun LogoTopAppBar(
                 contentDescription = null, // decorative element
                 modifier = Modifier
                     .size(56.dp)
-                    .scale(1.2F)
+                    .scale(1.15F)
                     .align(alignment = Alignment.Center)
             )
         }
@@ -153,7 +166,6 @@ fun LogoTopAppBarLiveButton(
                 playerViewModel = playerViewModel,
                 playable = Playable.Channel(channel = it),
                 style = PlaybackButtonStyle.LIVE,
-                modifier = Modifier.size(width = 80.dp, height = 40.dp),
             )
         }
     }

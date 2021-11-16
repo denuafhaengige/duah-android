@@ -95,7 +95,8 @@ class PlayerService: Player.Listener, MediaLibraryService() {
             ?: return null
         val playable = Playable.forMediaItemId(mediaItemId, contentProvider.contentStore)
             ?: return null
-        return Media3Integration.mediaItemForPlayable(playable, settings)
+        // TODO: Find out why the fuck artwork doesn't work
+        return Media3Integration.mediaItemForPlayable(playable, settings, fetchArtwork = false)
     }
 
     @androidx.annotation.OptIn(UnstableApi::class)

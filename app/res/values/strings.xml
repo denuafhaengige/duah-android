@@ -48,5 +48,9 @@
 
     <!-- Titles -->
     <string name="title_latest_broadcasts">seneste udsendelser</string>
+    <string name="title_programs">vores programmer</string>
+
+    <!-- General -->
+    <string name="all">alle</string>
 
 </resources>

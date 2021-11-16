@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.sp
 import com.denuafhaengige.duahandroid.player.Playable
 import com.denuafhaengige.duahandroid.player.PlayerViewModel
 import com.denuafhaengige.duahandroid.theming.RedColor
+import com.denuafhaengige.duahandroid.theming.VeryDarkerGrey
 import com.denuafhaengige.duahandroid.util.DurationFormatter
 import com.denuafhaengige.duahandroid.util.LivePlayable
 
@@ -49,12 +50,17 @@ fun AnimatedTinyPlayer(model: TinyPlayerModel) {
     ) {
         Box(
             modifier = Modifier
-                .background(Color.Black)
+                .background(VeryDarkerGrey)
                 .fillMaxWidth()
                 .height(model.height)
                 .clickable { model.playerViewModel.toggleLargePlayer.value = true },
             contentAlignment = Alignment.CenterStart,
         ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .drawAppBarBorderBehind(AppBarBorderVariant.TOP)
+            )
             livePlayable?.let {
                 TinyPlayerContent(
                     height = model.height,
@@ -77,7 +83,6 @@ fun TinyPlayerContent(height: Dp, livePlayable: LivePlayable, playerViewModel: P
 
     Row(
         modifier = Modifier
-            .background(Color.Black)
             .fillMaxSize(),
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
@@ -126,6 +131,7 @@ private fun TinyPlayerDescriptors(modifier: Modifier, playable: Playable) {
                     textAlign = TextAlign.Left,
                     fontSize = 12.sp,
                 ),
+                maxLines = 2,
             )
             playable.metaTitle?.let {
                 Text(
@@ -136,6 +142,7 @@ private fun TinyPlayerDescriptors(modifier: Modifier, playable: Playable) {
                         textAlign = TextAlign.Left,
                         fontSize = 10.sp,
                     ),
+                    maxLines = 1,
                 )
             }
         }

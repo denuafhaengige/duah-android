@@ -77,7 +77,7 @@ fun FeaturedPagerItem(
     val navAction = when (featured) {
         is Featured.Broadcast -> ({
             val destRoute =
-                NavigationRouteDest.Broadcast(id = featured.entity.id).destRoute
+                NavigationRouteDest.Broadcast(featured.entity).destRoute
             navController.navigate(route = destRoute)
         })
         else -> ({})

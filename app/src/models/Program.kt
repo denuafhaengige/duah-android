@@ -12,6 +12,7 @@ import kotlin.random.Random
 data class Program(
     @PrimaryKey
     override val id: Int,
+    val identifier: String?,
     override val title: String,
     override val description: String?,
     @Embedded(prefix = "square_image_file_")
@@ -25,6 +26,7 @@ data class Program(
         val example
             get() = Program(
                 id = Random(1000).nextInt(),
+                identifier = "enuafhaengigmorgen",
                 title = "En uafhænging morgen",
                 description = "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.",
                 hidden = false,
