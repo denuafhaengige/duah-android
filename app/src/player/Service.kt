@@ -2,7 +2,8 @@ package com.denuafhaengige.duahandroid.player
 
 import android.app.PendingIntent
 import android.content.Intent
-import androidx.media3.common.C.WAKE_MODE_NETWORK
+import androidx.media3.common.AudioAttributes
+import androidx.media3.common.C.*
 import androidx.media3.common.MediaItem
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
@@ -101,9 +102,16 @@ class PlayerService: Player.Listener, MediaLibraryService() {
 
     @androidx.annotation.OptIn(UnstableApi::class)
     private fun wireMediaSession() {
-        val renderersFactory = DefaultRenderersFactory(this).setEnableAudioOffload(true)
+        val renderersFactory = DefaultRenderersFactory(this)
+            // TODO: Figure out why this causes playback not to work on some devices
+            //.setEnableAudioOffload(true)
+        val audioAttributes = AudioAttributes.Builder()
+            .setUsage(USAGE_MEDIA)
+            .setContentType(CONTENT_TYPE_SPEECH)
+            .build()
         exoPlayer = ExoPlayer.Builder(this, renderersFactory)
             .setWakeMode(WAKE_MODE_NETWORK)
+            .setAudioAttributes(audioAttributes, true)
             .build()
         val sessionActivityPendingIntent =
             packageManager?.getLaunchIntentForPackage(packageName)?.let { sessionIntent ->
