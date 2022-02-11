@@ -26,6 +26,7 @@ class Settings(context: Context) {
         const val DataVersionResetThresholdKey = "data_version_reset_threshold"
         const val GraphEndpointKey = "graph_endpoint"
         const val RadioEndpointKey = "radio_endpoint"
+        const val RadioEndpointOverrideKey = "radio_endpoint_override"
         const val StreamEndpointKey = "stream_endpoint"
         const val ShowHiddenContentKey = "show_hidden_content"
     }
@@ -46,6 +47,9 @@ class Settings(context: Context) {
 
     val radioEndpoint: Uri
         get() = Uri.parse(appInfo.metaData.getString(RadioEndpointKey))
+
+    val radioEndpointOverride: Uri?
+        get() = appInfo.metaData.getString(RadioEndpointOverrideKey, null)?.let { Uri.parse(it) }
 
     val streamEndpoint: Uri
         get() = Uri.parse(appInfo.metaData.getString(StreamEndpointKey))

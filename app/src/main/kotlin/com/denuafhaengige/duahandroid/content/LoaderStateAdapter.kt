@@ -33,12 +33,10 @@ class ContentLoaderStateAdapter {
                         }
                         is ContentLoader.SyncState.Done ->
                             ContentProvider.State.Loading(state = ContentProvider.LoadingState.Done)
-                        else -> throw Throwable("Shut up")
                     }
                 }
                 is ContentLoader.State.Loaded ->
                     ContentProvider.State.PreparingContent
-                else -> throw Throwable("Shut up")
             }
         }
     }

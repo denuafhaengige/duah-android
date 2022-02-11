@@ -132,8 +132,6 @@ class ContentProvider(context: Context) {
                                 refreshLatestBroadcasts()
                             }
                         }
-                        else ->
-                            throw Throwable("Unhandled content store operation: $it")
                     }
                 }
         }

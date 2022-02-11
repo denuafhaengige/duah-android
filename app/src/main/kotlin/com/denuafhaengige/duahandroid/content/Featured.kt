@@ -69,7 +69,6 @@ class FeaturedFlow(featured: Featured, store: ContentStore) {
                         .collect { _flow.value = Featured.Program(it) }
                 }
             }
-            else -> throw Throwable("Unhandled case")
         }
     }
 

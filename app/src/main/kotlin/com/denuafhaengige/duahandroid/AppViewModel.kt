@@ -39,7 +39,7 @@ class AppViewModel(
         private val settings: Settings,
         private val player: Player,
     ): ViewModelProvider.Factory {
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
             if (!modelClass.isAssignableFrom(AppViewModel::class.java)) {
                 throw IllegalArgumentException("Unknown ViewModel Class")
             }

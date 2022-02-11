@@ -166,6 +166,12 @@ sealed class Playable: Identifiable, Titled, MetaTitled, Imaged {
     }
 
     fun preferredStreamWithSettings(settings: Settings): Stream? {
+        if (this is Channel && settings.radioEndpointOverride != null) {
+            return Stream(
+                type = StreamType.LIVE_AAC,
+                uri = settings.radioEndpointOverride!!,
+            )
+        }
         val streams = streamsWithSettings(settings)
         if (streams.isEmpty()) {
             return null

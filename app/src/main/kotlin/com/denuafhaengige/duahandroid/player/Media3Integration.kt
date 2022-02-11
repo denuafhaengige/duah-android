@@ -6,6 +6,7 @@ import android.net.Uri
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.Player
+import androidx.media3.common.util.UnstableApi
 import coil.ImageLoader
 import coil.request.ErrorResult
 import coil.request.ImageRequest
@@ -14,6 +15,7 @@ import com.denuafhaengige.duahandroid.Application
 import com.denuafhaengige.duahandroid.util.Settings
 import java.io.ByteArrayOutputStream
 
+@androidx.annotation.OptIn(UnstableApi::class)
 object Media3Integration {
 
     private suspend fun fetchBitmap(uri: Uri): Bitmap? {
@@ -58,9 +60,9 @@ object Media3Integration {
         return metadataBuilder.build()
     }
 
-    suspend fun mediaItemForPlayable(playable: Playable, settings: Settings, fetchArtwork: Boolean = false): MediaItem? {
-        val stream = playable.preferredStreamWithSettings(settings) ?: return null
+    suspend fun mediaItemForPlayable(playable: Playable, settings: Settings): MediaItem? {
         val metaData = mediaMetaDataForPlayable(playable)
+        var stream = playable.preferredStreamWithSettings(settings) ?: return null
         return MediaItem.Builder()
             .setMediaId(playable.mediaItemId.stringValue)
             .setMediaMetadata(metaData)

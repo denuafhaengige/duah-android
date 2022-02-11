@@ -63,22 +63,20 @@ abstract class GraphConnectionRequest(open var queryArgs: QueryArgs?, open var p
         if (queryArgs?.metaDataQuery != null) {
             variables["metaDataQuery"] = queryArgs!!.metaDataQuery!!
         }
-        if (pagination != null) {
-            when (pagination) {
+        pagination?.let {
+            when (it) {
                 is Pagination.Backward -> {
-                    val backward = pagination as Pagination.Backward
-                    if (backward.last != null) {
-                        variables["last"] = backward.last
+                    if (it.last != null) {
+                        variables["last"] = it.last
                     }
-                    variables["before"] = backward.before
+                    variables["before"] = it.before
                 }
                 is Pagination.Forward -> {
-                    val forward = pagination as Pagination.Forward
-                    if (forward.first != null) {
-                        variables["first"] = forward.first
+                    if (it.first != null) {
+                        variables["first"] = it.first
                     }
-                    if (forward.after != null) {
-                        variables["after"] = forward.after
+                    if (it.after != null) {
+                        variables["after"] = it.after
                     }
                 }
             }
@@ -112,7 +110,7 @@ data class GraphConnectionResult<T: Entity>(
 
 class GraphConnectionResultJsonAdapterFactory: JsonAdapter.Factory {
 
-    class GraphConnectionResultJsonAdapter(val moshi: Moshi, val factory: JsonAdapter.Factory): JsonAdapter<GraphConnectionResult<*>>() {
+    class GraphConnectionResultJsonAdapter(val moshi: Moshi, val factory: Factory): JsonAdapter<GraphConnectionResult<*>>() {
 
         override fun fromJson(reader: JsonReader): GraphConnectionResult<*>? {
             stepIntoData(reader)

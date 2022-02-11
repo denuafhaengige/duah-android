@@ -139,7 +139,7 @@ class Player (private val context: Context, private val settings: Settings) {
     }
 
     fun play(playable: Playable) = scope.launch {
-        val stream = playable.preferredStreamWithSettings(settings) ?: return@launch
+        var stream = playable.preferredStreamWithSettings(settings) ?: return@launch
         val mediaItem = Media3Integration.mediaItemForPlayable(playable, settings) ?: return@launch
         _playable.value = PlayableFlow(playable, contentProvider.contentStore)
         _stream.value = stream

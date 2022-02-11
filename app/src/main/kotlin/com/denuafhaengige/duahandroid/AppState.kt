@@ -37,14 +37,12 @@ sealed class AppState {
                         }
                         is ContentProvider.LoadingState.Done ->
                             Loading(progress = 0.95F){ it.getString(R.string.loading_descriptor_preparing_content).replaceFirstChar { char -> char.titlecase() }}
-                        else -> throw Throwable("Shut up")
                     }
                 }
                 is ContentProvider.State.PreparingContent ->
                     Loading(progress = 0.95F){ it.getString(R.string.loading_descriptor_preparing_content).replaceFirstChar { char -> char.titlecase() }}
                 is ContentProvider.State.ReadyToServe ->
                     Ready
-                else -> throw Throwable("Shut up")
             }
         }
 

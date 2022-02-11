@@ -1,7 +1,9 @@
 package com.denuafhaengige.duahandroid.player
 
 import android.app.PendingIntent
+import android.app.TaskStackBuilder
 import android.content.Intent
+import android.os.Build
 import androidx.media3.common.AudioAttributes
 import androidx.media3.common.C.*
 import androidx.media3.common.MediaItem
@@ -15,6 +17,7 @@ import androidx.media3.session.LibraryResult
 import androidx.media3.session.MediaLibraryService
 import androidx.media3.session.MediaSession
 import com.denuafhaengige.duahandroid.Application
+import com.denuafhaengige.duahandroid.MainActivity
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
 import com.denuafhaengige.duahandroid.util.Log
@@ -97,7 +100,8 @@ class PlayerService: Player.Listener, MediaLibraryService() {
         val playable = Playable.forMediaItemId(mediaItemId, contentProvider.contentStore)
             ?: return null
         // TODO: Find out why the fuck artwork doesn't work
-        return Media3Integration.mediaItemForPlayable(playable, settings, fetchArtwork = false)
+
+        return Media3Integration.mediaItemForPlayable(playable, settings)
     }
 
     @androidx.annotation.OptIn(UnstableApi::class)
@@ -113,9 +117,12 @@ class PlayerService: Player.Listener, MediaLibraryService() {
             .setWakeMode(WAKE_MODE_NETWORK)
             .setAudioAttributes(audioAttributes, true)
             .build()
+        val parentScreenIntent = Intent(this, MainActivity::class.java)
         val sessionActivityPendingIntent =
-            packageManager?.getLaunchIntentForPackage(packageName)?.let { sessionIntent ->
-                PendingIntent.getActivity(this, 0, sessionIntent, 0)
+            TaskStackBuilder.create(this).run {
+                addNextIntent(parentScreenIntent)
+                val immutableFlag = if (Build.VERSION.SDK_INT >= 23) PendingIntent.FLAG_IMMUTABLE else 0
+                getPendingIntent(0, immutableFlag or PendingIntent.FLAG_UPDATE_CURRENT)
             } ?: return
         mediaSession = MediaLibrarySession.Builder(this, exoPlayer, librarySessionCallback)
             .setMediaItemFiller(mediaItemFiller)

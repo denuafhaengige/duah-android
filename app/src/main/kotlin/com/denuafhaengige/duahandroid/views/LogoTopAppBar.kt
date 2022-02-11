@@ -11,25 +11,18 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.google.accompanist.insets.statusBarsHeight
 import com.denuafhaengige.duahandroid.R
+import com.google.accompanist.insets.statusBarsHeight
 import com.denuafhaengige.duahandroid.models.ChannelWithCurrentBroadcast
 import com.denuafhaengige.duahandroid.player.Playable
 import com.denuafhaengige.duahandroid.player.PlayerViewModel
-import com.denuafhaengige.duahandroid.theming.LighterDarkGrey
-import com.denuafhaengige.duahandroid.theming.VeryDarkerGrey
-import com.denuafhaengige.duahandroid.theming.VeryLighterGrey
 import com.denuafhaengige.duahandroid.util.LiveEntity
 
 @Composable
@@ -60,8 +53,6 @@ fun LogoTopAppBar(
     leftBarItem: @Composable () -> Unit,
     rightBarItem: @Composable () -> Unit,
 ) {
-
-    val borderColor = LighterDarkGrey
 
     val logoPainter =
         if (isSystemInDarkTheme()) painterResource(id = R.drawable.round_icon_black_on_white)
