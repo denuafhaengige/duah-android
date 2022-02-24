@@ -15,12 +15,14 @@ data class Program(
     val identifier: String?,
     override val title: String,
     override val description: String?,
+    @JsonContentAccessLevel
+    override val contentAccessLevel: ContentAccessLevel?,
     @Embedded(prefix = "square_image_file_")
     val squareImageFile: File?,
     @Embedded(prefix = "wide_image_file_")
     val wideImageFile: File?,
     val hidden: Boolean,
-): Entity, Titled, Imaged, Described {
+): Entity, Titled, Imaged, Described, AccessControlled {
 
     companion object {
         val example
@@ -29,6 +31,7 @@ data class Program(
                 identifier = "enuafhaengigmorgen",
                 title = "En uafhænging morgen",
                 description = "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.",
+                contentAccessLevel = ContentAccessLevel.FREE,
                 hidden = false,
                 squareImageFile = File(
                     path = "",

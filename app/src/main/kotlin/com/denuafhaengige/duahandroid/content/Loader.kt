@@ -14,9 +14,15 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
+import okhttp3.OkHttpClient
 import java.util.*
 
-class ContentLoader(val store: ContentStore, val settings: Settings, val moshi: Moshi) {
+class ContentLoader(
+    private val store: ContentStore,
+    private val settings: Settings,
+    private val okHttpClient: OkHttpClient,
+    private val moshi: Moshi
+) {
 
     // MARK: Types
 
@@ -110,7 +116,8 @@ class ContentLoader(val store: ContentStore, val settings: Settings, val moshi: 
         Log.debug("ContentLoader | onStarting()")
         if (!this::graphService.isInitialized) {
             Log.debug("ContentLoader | onStarting() | initializing GraphService")
-            graphService = GraphServiceFactory(moshi = moshi).createService(settings.graphEndpoint, lifecycle)
+            graphService = GraphServiceFactory(okHttpClient = okHttpClient, moshi = moshi)
+                .createService(settings.graphEndpoint, lifecycle)
             wireGraphService()
         }
         Log.debug("ContentLoader | onStarting() | starting GraphService")

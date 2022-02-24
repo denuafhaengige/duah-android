@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.sp
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.denuafhaengige.duahandroid.R
+import com.denuafhaengige.duahandroid.members.MembersViewModel
 import com.denuafhaengige.duahandroid.models.BroadcastFetcher
 import com.denuafhaengige.duahandroid.models.ChannelWithCurrentBroadcast
 import com.denuafhaengige.duahandroid.player.Playable
@@ -44,6 +45,7 @@ import com.google.accompanist.insets.statusBarsPadding
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun DynamicLargePlayer(
+    membersViewModel: MembersViewModel,
     playerViewModel: PlayerViewModel,
     liveChannel: LiveEntity<ChannelWithCurrentBroadcast>,
     broadcastFetcher: BroadcastFetcher,
@@ -66,6 +68,7 @@ fun DynamicLargePlayer(
             closeButtonAction = closeButtonAction,
             playbackControls = {
                 DynamicLargePlayerPlaybackControls(
+                    membersViewModel,
                     playerViewModel,
                     playable,
                     liveChannel,
@@ -182,6 +185,7 @@ fun LargePlayerPlayableVisual(playable: Playable, modifier: Modifier = Modifier)
 
 @Composable
 fun DynamicLargePlayerPlaybackControls(
+    membersViewModel: MembersViewModel,
     playerViewModel: PlayerViewModel,
     playable: Playable,
     liveChannel: LiveEntity<ChannelWithCurrentBroadcast>,
@@ -210,6 +214,7 @@ fun DynamicLargePlayerPlaybackControls(
         },
         playbackButton = {
             DynamicPlaybackButton(
+                membersViewModel = membersViewModel,
                 playerViewModel = playerViewModel,
                 playable = playable,
                 style = PlaybackButtonStyle.NEW_CIRCLE,

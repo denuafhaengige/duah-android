@@ -9,48 +9,70 @@
     <!-- Localization -->
 
     <!-- Loading -->
-    <string name="loading_descriptor_connecting">forbinder</string>
-    <string name="loading_descriptor_starting">starter</string>
-    <string name="loading_descriptor_configuring">konfigurerer</string>
-    <string name="loading_descriptor_synchronizing">henter %1s</string>
-    <string name="loading_descriptor_preparing_content">forbereder indhold</string>
+    <string name="loading_descriptor_connecting">connecting</string>
+    <string name="loading_descriptor_starting">starting</string>
+    <string name="loading_descriptor_configuring">configuring</string>
+    <string name="loading_descriptor_synchronizing">loading %1s</string>
+    <string name="loading_descriptor_preparing_content">preparing content</string>
 
     <!-- Entity types -->
     <plurals name="entity_type_broadcast">
-        <item quantity="one">udsendelse</item>
-        <item quantity="other">udsendelser</item>
+        <item quantity="one">broadcast</item>
+        <item quantity="other">broadcasts</item>
     </plurals>
     <plurals name="entity_type_program">
         <item quantity="one">program</item>
-        <item quantity="other">programmer</item>
+        <item quantity="other">programs</item>
     </plurals>
     <plurals name="entity_type_channel">
-        <item quantity="one">kanal</item>
-        <item quantity="other">kanaler</item>
+        <item quantity="one">channel</item>
+        <item quantity="other">channels</item>
     </plurals>
     <plurals name="entity_type_employee">
-        <item quantity="one">medarbejder</item>
-        <item quantity="other">medarbejdere</item>
+        <item quantity="one">employee</item>
+        <item quantity="other">employees</item>
     </plurals>
     <plurals name="entity_type_setting">
-        <item quantity="one">indstilling</item>
-        <item quantity="other">indstillinger</item>
+        <item quantity="one">setting</item>
+        <item quantity="other">settings</item>
     </plurals>
 
     <!-- Entity type variants -->
     <plurals name="entity_type_host_employee">
-        <item quantity="one">vært</item>
-        <item quantity="other">værter</item>
+        <item quantity="one">host</item>
+        <item quantity="other">hosts</item>
     </plurals>
 
     <!-- Fallback values -->
     <string name="fallback_program_title">den uafhængige</string>
 
-    <!-- Titles -->
-    <string name="title_latest_broadcasts">seneste udsendelser</string>
-    <string name="title_programs">vores programmer</string>
+    <!-- Content Row Titles -->
+    <string name="title_latest_broadcasts">latest broadcasts</string>
+    <string name="title_programs">our programs</string>
+
+    <!-- Member Overview -->
+    <string name="member_overview_title">My Den Uafhængige</string>
+    <string name="member_overview_text_logged_in_as">You are logged in as:</string>
+    <string name="member_overview_button_log_out">Log out</string>
+    <string name="member_overview_subtitle_memberships">Memberships</string>
+    <string name="member_overview_button_refresh">Refresh</string>
+    <string name="member_overview_active">Active</string>
+    <string name="member_overview_cancelled">Cancelled</string>
+    <string name="member_overview_mobile_pay">MobilePay</string>
+    <string name="member_overview_apple">Apple</string>
+    <string name="member_overview_yearly_active_renews_on">Yearly, next payment:</string>
+    <string name="member_overview_yearly_cancelled_expires_on">Yearly, expires on:</string>
+    <string name="member_overview_monthly_active_renews_on">Monthly, next payment:</string>
+    <string name="member_overview_monthly_cancelled_expires_on">Monthly, expires on:</string>
+    <string name="member_overview_no_memberships_text">We found no memberships associated with your e-mail. Become a member here:</string>
+
+    <!-- Not Member Alert -->
+    <string name="not_member_alert_title">Members Only</string>
+    <string name="not_member_alert_text">You need to log in to listen to this content. Continue to log in or register.</string>
+    <string name="not_member_alert_cancel">Cancel</string>
+    <string name="not_member_alert_continue">Continue</string>
 
     <!-- General -->
-    <string name="all">alle</string>
+    <string name="all">all</string>
 
 </resources>

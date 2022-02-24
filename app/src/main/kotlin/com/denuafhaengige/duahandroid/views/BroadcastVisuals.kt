@@ -12,6 +12,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
+import com.denuafhaengige.duahandroid.members.MembersViewModel
 import com.denuafhaengige.duahandroid.models.BroadcastWithProgramAndEmployees
 import com.denuafhaengige.duahandroid.player.Playable
 import com.denuafhaengige.duahandroid.player.PlayerViewModel
@@ -23,11 +24,13 @@ enum class BroadcastVisualStyle {
 
 @Composable
 fun DynamicBroadcastVisualPlayButton(
+    membersViewModel: MembersViewModel,
     playerViewModel: PlayerViewModel,
     broadcast: BroadcastWithProgramAndEmployees,
 ) {
     BroadcastVisualPlayButton { verticalPadding, horizontalPadding, diameter ->
         DynamicPlaybackButton(
+            membersViewModel = membersViewModel,
             playerViewModel = playerViewModel,
             playable = Playable.Broadcast(broadcast),
             style = PlaybackButtonStyle.NEW_CIRCLE,

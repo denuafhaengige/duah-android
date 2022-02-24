@@ -34,15 +34,16 @@ fun DynamicProgramsContentRow(programs: List<LiveEntity<Program>>, navController
         ) {
             items(items = programs) { liveProgram ->
                 val observedProgram by liveProgram.liveEntity.observeAsState()
-                val program = observedProgram ?: return@items
-                ProgramsContentRowItem(program) {
-                    navController.navigate(
-                        route = NavigationRouteDest.BroadcastsList(
-                            filter = BroadcastsFilter(
-                                programIds = listOf(program.id)
-                            )
-                        ).destRoute
-                    )
+                observedProgram?.let {
+                    ProgramsContentRowItem(it) {
+                        navController.navigate(
+                            route = NavigationRouteDest.BroadcastsList(
+                                filter = BroadcastsFilter(
+                                    programIds = listOf(it.id)
+                                )
+                            ).destRoute
+                        )
+                    }
                 }
             }
         }

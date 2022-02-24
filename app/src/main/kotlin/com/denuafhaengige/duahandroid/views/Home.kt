@@ -38,6 +38,7 @@ fun Home(viewModel: AppViewModel, navController: NavController) {
         featuredContent?.let {
             FeaturedPager(
                 content = it,
+                membersViewModel = viewModel.membersViewModel,
                 playerViewModel = viewModel.playerViewModel,
                 navController = navController,
             )
@@ -46,6 +47,7 @@ fun Home(viewModel: AppViewModel, navController: NavController) {
         latestBroadcasts?.let {
             LatestBroadcasts(
                 playableBroadcasts = it,
+                membersViewModel = viewModel.membersViewModel,
                 playerViewModel = viewModel.playerViewModel,
                 navController = navController,
             )

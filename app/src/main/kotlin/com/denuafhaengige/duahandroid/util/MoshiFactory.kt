@@ -1,5 +1,7 @@
-package com.denuafhaengige.duahandroid.graph
+package com.denuafhaengige.duahandroid.util
 
+import com.denuafhaengige.duahandroid.graph.*
+import com.denuafhaengige.duahandroid.members.*
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.adapters.Rfc3339DateJsonAdapter
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -24,6 +26,10 @@ class MoshiFactory {
                 .add(EmployeeTypeAdapter())
                 .add(Date::class.java, Rfc3339DateJsonAdapter())
                 .add(FeaturedSetting.ValueTypeAdapter())
+                .add(MemberSubscriptionStatusAdapter())
+                .add(MemberSubscriptionChargeFrequencyAdapter())
+                .add(MemberSubscriptionTypeAdapter())
+                .add(ContentAccessLevelAdapter())
                 .add(KotlinJsonAdapterFactory())
                 .build()
         }

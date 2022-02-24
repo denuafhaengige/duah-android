@@ -68,5 +68,6 @@ data class GraphBroadcastConnectionRequest(
             url,
             path,
         },
+        contentAccessLevel,
         """.trimIndent()
 }

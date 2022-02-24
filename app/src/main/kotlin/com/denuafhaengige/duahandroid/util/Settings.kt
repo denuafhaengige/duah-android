@@ -28,7 +28,11 @@ class Settings(context: Context) {
         const val RadioEndpointKey = "radio_endpoint"
         const val RadioEndpointOverrideKey = "radio_endpoint_override"
         const val StreamEndpointKey = "stream_endpoint"
+        const val MembersEndpointKey = "members_endpoint"
         const val ShowHiddenContentKey = "show_hidden_content"
+        const val Auth0ClientId = "auth0_client_id"
+        const val Auth0Domain = "auth0_domain"
+        const val SubscribeUrl = "subscribe_url"
     }
 
     // MARK: Props
@@ -54,8 +58,20 @@ class Settings(context: Context) {
     val streamEndpoint: Uri
         get() = Uri.parse(appInfo.metaData.getString(StreamEndpointKey))
 
+    val membersEndpoint: Uri
+        get() = Uri.parse(appInfo.metaData.getString(MembersEndpointKey))
+
     val showHiddenContent: Boolean
         get() = appInfo.metaData.getString(ShowHiddenContentKey) == "true"
+
+    val auth0ClientId: String?
+        get() = appInfo.metaData.getString(Auth0ClientId)
+
+    val auth0Domain: String?
+        get() = appInfo.metaData.getString(Auth0Domain)
+
+    val subscribeUrl: Uri
+        get() = Uri.parse(appInfo.metaData.getString(SubscribeUrl))
 
     private val Context.dataStore: DataStore<Preferences> by preferencesDataStore("settings")
     private val dataStore: DataStore<Preferences> = context.dataStore

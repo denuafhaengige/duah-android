@@ -32,12 +32,9 @@ interface GraphService {
     fun receiveRequestResponse(): Flowable<GraphRequestResponseMessage>
 }
 
-class GraphServiceFactory(val moshi: Moshi) {
+class GraphServiceFactory(private val okHttpClient: OkHttpClient, private val moshi: Moshi) {
 
     fun createService(uri: Uri, lifecycle: Lifecycle): GraphService {
-        val okHttpClient = OkHttpClient.Builder()
-            .pingInterval(duration = Duration.ofSeconds(10))
-            .build()
         val moshiMessageAdapterFactory = MoshiMessageAdapter.Factory(moshi)
         val rxJava2StreamAdapterFactory = RxJava2StreamAdapterFactory()
         val scarletInstance = Scarlet.Builder()

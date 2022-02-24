@@ -4,6 +4,6 @@ import java.time.Instant
 import java.util.*
 
 object DateUtil {
-    fun nowMinusMinutes(minutes: Long) =
+    fun nowMinusMinutes(minutes: Long): Date =
         Date.from(Instant.now().minusSeconds((minutes*60)))
 }

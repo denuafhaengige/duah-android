@@ -24,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.denuafhaengige.duahandroid.members.MembersViewModel
 import com.denuafhaengige.duahandroid.player.Playable
 import com.denuafhaengige.duahandroid.player.PlayerViewModel
 import com.denuafhaengige.duahandroid.theming.RedColor
@@ -31,16 +32,15 @@ import com.denuafhaengige.duahandroid.theming.VeryDarkerGrey
 import com.denuafhaengige.duahandroid.util.DurationFormatter
 import com.denuafhaengige.duahandroid.util.LivePlayable
 
-data class TinyPlayerModel(
-    val playerViewModel: PlayerViewModel,
-    val height: Dp = 70.dp,
-)
-
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun AnimatedTinyPlayer(model: TinyPlayerModel) {
+fun AnimatedTinyPlayer(
+    membersViewModel: MembersViewModel,
+    playerViewModel: PlayerViewModel,
+    height: Dp = 70.dp,
+) {
 
-    val livePlayable by model.playerViewModel.playable.observeAsState()
+    val livePlayable by playerViewModel.playable.observeAsState()
     val toggle = livePlayable != null
 
     AnimatedVisibility(
@@ -52,8 +52,8 @@ fun AnimatedTinyPlayer(model: TinyPlayerModel) {
             modifier = Modifier
                 .background(VeryDarkerGrey)
                 .fillMaxWidth()
-                .height(model.height)
-                .clickable { model.playerViewModel.toggleLargePlayer.value = true },
+                .height(height)
+                .clickable { playerViewModel.toggleLargePlayer.value = true },
             contentAlignment = Alignment.CenterStart,
         ) {
             Box(
@@ -63,9 +63,10 @@ fun AnimatedTinyPlayer(model: TinyPlayerModel) {
             )
             livePlayable?.let {
                 TinyPlayerContent(
-                    height = model.height,
+                    height = height,
                     livePlayable = it,
-                    playerViewModel = model.playerViewModel,
+                    membersViewModel = membersViewModel,
+                    playerViewModel = playerViewModel,
                 )
             }
         }
@@ -73,7 +74,12 @@ fun AnimatedTinyPlayer(model: TinyPlayerModel) {
 }
 
 @Composable
-fun TinyPlayerContent(height: Dp, livePlayable: LivePlayable, playerViewModel: PlayerViewModel) {
+fun TinyPlayerContent(
+    height: Dp,
+    livePlayable: LivePlayable,
+    membersViewModel: MembersViewModel,
+    playerViewModel: PlayerViewModel,
+) {
 
     val observedPlayable by livePlayable.livePlayable.observeAsState()
     val playable = observedPlayable ?: return
@@ -88,6 +94,7 @@ fun TinyPlayerContent(height: Dp, livePlayable: LivePlayable, playerViewModel: P
     ) {
         DynamicPlaybackButton(
             style = PlaybackButtonStyle.PLAIN,
+            membersViewModel = membersViewModel,
             playerViewModel = playerViewModel,
             playable = playable,
             modifier = Modifier

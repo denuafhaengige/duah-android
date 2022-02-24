@@ -12,6 +12,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -19,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.denuafhaengige.duahandroid.R
+import com.denuafhaengige.duahandroid.members.MembersViewModel
 import com.google.accompanist.insets.statusBarsHeight
 import com.denuafhaengige.duahandroid.models.ChannelWithCurrentBroadcast
 import com.denuafhaengige.duahandroid.player.Playable
@@ -27,19 +29,30 @@ import com.denuafhaengige.duahandroid.util.LiveEntity
 
 @Composable
 fun DynamicLogoTopAppBar(
+    membersViewModel: MembersViewModel,
     playerViewModel: PlayerViewModel,
     navController: NavController,
     liveChannel: LiveEntity<ChannelWithCurrentBroadcast>?,
 ) {
+    val backTrackEntry by navController.currentBackStackEntryAsState()
+    var canNavigateUp by remember { mutableStateOf(false) }
+
+    LaunchedEffect(backTrackEntry) {
+        canNavigateUp = navController.previousBackStackEntry != null
+    }
+
     LogoTopAppBar(
         leftBarItem = {
-            DynamicLogoTopAppBarBackButton(
-                navController = navController
-            )
+            if (canNavigateUp) {
+                DynamicLogoTopAppBarBackButton(navController)
+            } else {
+                LogoTopAppBarMemberButton(membersViewModel)
+            }
         },
         rightBarItem = {
             liveChannel?.let {
                 LogoTopAppBarLiveButton(
+                    membersViewModel = membersViewModel,
                     playerViewModel = playerViewModel,
                     liveChannel = liveChannel,
                 )
@@ -100,38 +113,24 @@ fun LogoTopAppBar(
 @Composable
 fun DynamicLogoTopAppBarBackButton(navController: NavController) {
 
-    val backTrackEntry by navController.currentBackStackEntryAsState()
-    var canNavigateUp by remember { mutableStateOf(false) }
-
-    LaunchedEffect(backTrackEntry) {
-        canNavigateUp = navController.previousBackStackEntry != null
+    LogoTopAppBarBackButton {
+        if (navController.previousBackStackEntry != null) {
+            navController.popBackStack()
+        }
     }
-
-    if (!canNavigateUp) {
-        return
-    }
-
-    LogoTopAppBarBackButton(
-        action = {
-            if (navController.previousBackStackEntry != null) {
-                navController.popBackStack()
-            }
-        },
-        modifier = Modifier
-            .fillMaxHeight()
-            .aspectRatio(1F),
-    )
 }
 
 @Composable
 fun LogoTopAppBarBackButton(
-    action: () -> Unit,
     modifier: Modifier = Modifier,
+    action: () -> Unit = {},
 ) {
 
     IconButton(
         onClick = action,
-        modifier = modifier,
+        modifier = modifier
+            .fillMaxHeight()
+            .aspectRatio(1F),
     ) {
         Icon(
             painter = rememberVectorPainter(image = Icons.Default.ArrowBack),
@@ -144,7 +143,28 @@ fun LogoTopAppBarBackButton(
 }
 
 @Composable
+fun LogoTopAppBarMemberButton(
+    membersViewModel: MembersViewModel,
+) {
+    DynamicMemberButton(
+        membersViewModel = membersViewModel,
+        modifier = Modifier.padding(start = 5.dp),
+    )
+}
+
+@Composable
+private fun LogoTopAppBarMemberButtonPreview(
+    state: MemberButtonState
+) {
+    MemberButton(
+        state = state,
+        modifier = Modifier.padding(start = 5.dp),
+    )
+}
+
+@Composable
 fun LogoTopAppBarLiveButton(
+    membersViewModel: MembersViewModel,
     playerViewModel: PlayerViewModel,
     liveChannel: LiveEntity<ChannelWithCurrentBroadcast>,
 ) {
@@ -154,6 +174,7 @@ fun LogoTopAppBarLiveButton(
     channel?.let {
         Box(modifier = Modifier.padding(end = 5.dp)) {
             DynamicPlaybackButton(
+                membersViewModel = membersViewModel,
                 playerViewModel = playerViewModel,
                 playable = Playable.Channel(channel = it),
                 style = PlaybackButtonStyle.LIVE,
@@ -178,17 +199,35 @@ private fun LogoTopAppBarLiveButtonPreview() {
 @Composable
 private fun LogoTopAppBarPreview() {
 
-    LogoTopAppBar(
-        leftBarItem = {
-            LogoTopAppBarBackButton(
-                action = {},
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .aspectRatio(1F),
-            )
-        },
-        rightBarItem = {
-            LogoTopAppBarLiveButtonPreview()
-        }
-    )
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.LightGray),
+        verticalArrangement = Arrangement.SpaceEvenly,
+    ) {
+        LogoTopAppBar(
+            leftBarItem = {
+                LogoTopAppBarMemberButtonPreview(state = MemberButtonState.NOT_LOGGED_IN)
+            },
+            rightBarItem = {
+                LogoTopAppBarLiveButtonPreview()
+            }
+        )
+        LogoTopAppBar(
+            leftBarItem = {
+                LogoTopAppBarMemberButtonPreview(state = MemberButtonState.LOGGED_IN)
+            },
+            rightBarItem = {
+                LogoTopAppBarLiveButtonPreview()
+            }
+        )
+        LogoTopAppBar(
+            leftBarItem = {
+                LogoTopAppBarBackButton()
+            },
+            rightBarItem = {
+                LogoTopAppBarLiveButtonPreview()
+            }
+        )
+    }
 }

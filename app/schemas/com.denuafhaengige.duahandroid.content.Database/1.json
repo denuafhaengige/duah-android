@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "dea0b36384ea0e56efe8a9ce4578d44d",
+    "identityHash": "d0acfbf479748b5efdb7b64981e490be",
     "entities": [
       {
         "tableName": "Broadcast",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `season` INTEGER, `number` INTEGER, `title` TEXT NOT NULL, `broadcasted` INTEGER, `description` TEXT, `hidden` INTEGER NOT NULL, `duration` INTEGER, `program_id` INTEGER, `square_image_file_url` TEXT, `square_image_file_mime_type` TEXT, `square_image_file_type` TEXT, `square_image_file_path` TEXT, `wide_image_file_url` TEXT, `wide_image_file_mime_type` TEXT, `wide_image_file_type` TEXT, `wide_image_file_path` TEXT, `vod_segmented_folder_url` TEXT, `vod_segmented_folder_mime_type` TEXT, `vod_segmented_folder_type` TEXT, `vod_segmented_folder_path` TEXT, `vod_single_file_folder_url` TEXT, `vod_single_file_folder_mime_type` TEXT, `vod_single_file_folder_type` TEXT, `vod_single_file_folder_path` TEXT, `vod_direct_file_url` TEXT, `vod_direct_file_mime_type` TEXT, `vod_direct_file_type` TEXT, `vod_direct_file_path` TEXT, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `season` INTEGER, `number` INTEGER, `title` TEXT NOT NULL, `broadcasted` INTEGER, `description` TEXT, `contentAccessLevel` TEXT, `hidden` INTEGER NOT NULL, `duration` INTEGER, `program_id` INTEGER, `square_image_file_url` TEXT, `square_image_file_mime_type` TEXT, `square_image_file_type` TEXT, `square_image_file_path` TEXT, `wide_image_file_url` TEXT, `wide_image_file_mime_type` TEXT, `wide_image_file_type` TEXT, `wide_image_file_path` TEXT, `vod_segmented_folder_url` TEXT, `vod_segmented_folder_mime_type` TEXT, `vod_segmented_folder_type` TEXT, `vod_segmented_folder_path` TEXT, `vod_single_file_folder_url` TEXT, `vod_single_file_folder_mime_type` TEXT, `vod_single_file_folder_type` TEXT, `vod_single_file_folder_path` TEXT, `vod_direct_file_url` TEXT, `vod_direct_file_mime_type` TEXT, `vod_direct_file_type` TEXT, `vod_direct_file_path` TEXT, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -41,6 +41,12 @@
           {
             "fieldPath": "description",
             "columnName": "description",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "contentAccessLevel",
+            "columnName": "contentAccessLevel",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -384,7 +390,7 @@
       },
       {
         "tableName": "Program",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `identifier` TEXT, `title` TEXT NOT NULL, `description` TEXT, `hidden` INTEGER NOT NULL, `square_image_file_url` TEXT, `square_image_file_mime_type` TEXT, `square_image_file_type` TEXT, `square_image_file_path` TEXT, `wide_image_file_url` TEXT, `wide_image_file_mime_type` TEXT, `wide_image_file_type` TEXT, `wide_image_file_path` TEXT, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `identifier` TEXT, `title` TEXT NOT NULL, `description` TEXT, `contentAccessLevel` TEXT, `hidden` INTEGER NOT NULL, `square_image_file_url` TEXT, `square_image_file_mime_type` TEXT, `square_image_file_type` TEXT, `square_image_file_path` TEXT, `wide_image_file_url` TEXT, `wide_image_file_mime_type` TEXT, `wide_image_file_type` TEXT, `wide_image_file_path` TEXT, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -407,6 +413,12 @@
           {
             "fieldPath": "description",
             "columnName": "description",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "contentAccessLevel",
+            "columnName": "contentAccessLevel",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -537,6 +549,7 @@
             "columnNames": [
               "broadcast_id"
             ],
+            "orders": [],
             "createSql": "CREATE INDEX IF NOT EXISTS `index_BroadcastEmployeeCrossRef_broadcast_id` ON `${TABLE_NAME}` (`broadcast_id`)"
           },
           {
@@ -545,6 +558,7 @@
             "columnNames": [
               "employee_id"
             ],
+            "orders": [],
             "createSql": "CREATE INDEX IF NOT EXISTS `index_BroadcastEmployeeCrossRef_employee_id` ON `${TABLE_NAME}` (`employee_id`)"
           }
         ],
@@ -554,7 +568,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'dea0b36384ea0e56efe8a9ce4578d44d')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'd0acfbf479748b5efdb7b64981e490be')"
     ]
   }
 }

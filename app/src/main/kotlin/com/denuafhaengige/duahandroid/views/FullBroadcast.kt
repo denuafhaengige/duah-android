@@ -59,6 +59,7 @@ fun DynamicFullBroadcast(viewModel: AppViewModel, liveBroadcast: LiveEntity<Broa
         broadcast = broadcast,
         topVisualContent = {
             DynamicBroadcastVisualPlayButton(
+                membersViewModel = viewModel.membersViewModel,
                 playerViewModel = viewModel.playerViewModel,
                 broadcast = broadcast,
             )

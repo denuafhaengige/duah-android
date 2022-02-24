@@ -15,6 +15,7 @@ import com.denuafhaengige.duahandroid.util.Log
 import com.denuafhaengige.duahandroid.util.Settings
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
+import okhttp3.OkHttpClient
 import java.util.*
 
 class ContentProvider(context: Context) {
@@ -65,6 +66,8 @@ class ContentProvider(context: Context) {
     val contentStore: ContentStore
     private val settings: Settings
         get() = Application.settings
+    private val okHttpClient: OkHttpClient
+        get() = Application.okHttpClient
     private val moshi: Moshi
         get() = Application.moshi
 
@@ -77,6 +80,7 @@ class ContentProvider(context: Context) {
         contentLoader = ContentLoader(
             store = contentStore,
             settings = settings,
+            okHttpClient = okHttpClient,
             moshi = moshi
         )
         scope.launch { start() }

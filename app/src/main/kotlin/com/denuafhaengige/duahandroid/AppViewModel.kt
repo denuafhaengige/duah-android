@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.airbnb.lottie.animation.content.Content
 import com.denuafhaengige.duahandroid.content.ContentProvider
+import com.denuafhaengige.duahandroid.members.MembersViewModel
 import com.denuafhaengige.duahandroid.models.BroadcastWithProgramAndEmployees
 import com.github.michaelbull.result.*
 import com.denuafhaengige.duahandroid.models.ChannelWithCurrentBroadcast
@@ -52,6 +53,7 @@ class AppViewModel(
 
     private val scope = CoroutineScope(Dispatchers.Main)
     val playerViewModel = PlayerViewModel(player)
+    val membersViewModel = MembersViewModel(settings)
 
     // MARK: UI Fields
 

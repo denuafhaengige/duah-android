@@ -15,6 +15,7 @@ import androidx.navigation.NavController
 import com.google.accompanist.pager.*
 import com.denuafhaengige.duahandroid.content.Featured
 import com.denuafhaengige.duahandroid.R
+import com.denuafhaengige.duahandroid.members.MembersViewModel
 import com.denuafhaengige.duahandroid.player.PlayerViewModel
 import com.denuafhaengige.duahandroid.util.LiveFeatured
 import com.denuafhaengige.duahandroid.util.capitalizeWords
@@ -23,6 +24,7 @@ import com.denuafhaengige.duahandroid.util.capitalizeWords
 @Composable
 fun FeaturedPager(
     content: List<LiveFeatured>,
+    membersViewModel: MembersViewModel,
     playerViewModel: PlayerViewModel,
     navController: NavController,
 ) {
@@ -52,6 +54,7 @@ fun FeaturedPager(
             val item = content[page]
             FeaturedPagerItem(
                 liveFeatured = item,
+                membersViewModel = membersViewModel,
                 playerViewModel = playerViewModel,
                 navController = navController,
                 modifier = Modifier
@@ -66,6 +69,7 @@ fun FeaturedPager(
 @Composable
 fun FeaturedPagerItem(
     liveFeatured: LiveFeatured,
+    membersViewModel: MembersViewModel,
     playerViewModel: PlayerViewModel,
     navController: NavController,
     modifier: Modifier = Modifier,
@@ -97,6 +101,7 @@ fun FeaturedPagerItem(
                         .height(ContentDimensions.wideBannerHeight),
                 ) {
                     DynamicBroadcastVisualPlayButton(
+                        membersViewModel = membersViewModel,
                         playerViewModel = playerViewModel,
                         broadcast = featured.entity,
                     )

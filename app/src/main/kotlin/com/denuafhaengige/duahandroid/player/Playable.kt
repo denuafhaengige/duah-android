@@ -58,7 +58,7 @@ class PlayableFlow(playable: Playable, store: ContentStore) {
     }
 }
 
-sealed class Playable: Identifiable, Titled, MetaTitled, Imaged {
+sealed class Playable: Identifiable, Titled, MetaTitled, Imaged, AccessControlled {
 
     class Broadcast(val broadcast: BroadcastModel): Playable() {
         override val title: String
@@ -71,6 +71,8 @@ sealed class Playable: Identifiable, Titled, MetaTitled, Imaged {
             get() = broadcast.squareImageUri
         override val wideImageUri: Uri?
             get() = broadcast.wideImageUri
+        override val contentAccessLevel: ContentAccessLevel
+            get() = broadcast.contentAccessLevel ?: ContentAccessLevel.FREE
     }
     class Channel(val channel: ChannelModel): Playable() {
         override val title: String
@@ -83,6 +85,8 @@ sealed class Playable: Identifiable, Titled, MetaTitled, Imaged {
             get() = channel.squareImageUri
         override val wideImageUri: Uri?
             get() = channel.wideImageUri
+        override val contentAccessLevel: ContentAccessLevel
+            get() = ContentAccessLevel.FREE_WITH_ADS
     }
 
     // MARK: Types

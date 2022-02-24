@@ -37,6 +37,7 @@ data class GraphProgramsConnectionRequest(
             url,
             path,
         },
-        hidden
+        hidden,
+        contentAccessLevel,
         """.trimIndent()
 }

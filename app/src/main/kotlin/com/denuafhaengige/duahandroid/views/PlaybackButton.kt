@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -26,6 +27,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.denuafhaengige.duahandroid.R
+import com.denuafhaengige.duahandroid.members.MemberAuthState
+import com.denuafhaengige.duahandroid.members.MembersViewModel
+import com.denuafhaengige.duahandroid.models.ContentAccessLevel
 import com.denuafhaengige.duahandroid.models.Employee
 import com.denuafhaengige.duahandroid.player.Playable
 import com.denuafhaengige.duahandroid.player.Player
@@ -44,10 +48,12 @@ enum class PlaybackButtonVariant {
     PLAY,
     PAUSE,
     LOADING,
+    LOCKED,
 }
 
 @Composable
 fun DynamicPlaybackButton(
+    membersViewModel: MembersViewModel,
     playerViewModel: PlayerViewModel,
     playable: Playable,
     style: PlaybackButtonStyle,
@@ -55,6 +61,9 @@ fun DynamicPlaybackButton(
 ) {
     val observedPlayerState by playerViewModel.state.observeAsState()
     val observedLivePlayerPlayable by playerViewModel.playable.observeAsState()
+    val hasAccessProvidingSubscription by membersViewModel.hasAccessProvidingSubscription.observeAsState(
+        initial = false
+    )
 
     val playerState = observedPlayerState ?: return
 
@@ -64,7 +73,13 @@ fun DynamicPlaybackButton(
         return@let playerPlayable.mediaItemId == playable.mediaItemId
     } ?: false
 
+    val lockedContent =
+        playable.contentAccessLevel == ContentAccessLevel.MEMBERS_ONLY &&
+        !hasAccessProvidingSubscription
+
     val variant = when {
+        lockedContent ->
+            PlaybackButtonVariant.LOCKED
         playableIsPlayerPlayable -> when (playerState) {
             is Player.State.Paused,
             is Player.State.Error,
@@ -72,15 +87,21 @@ fun DynamicPlaybackButton(
             is Player.State.Playing -> PlaybackButtonVariant.PAUSE
             is Player.State.Loading -> PlaybackButtonVariant.LOADING
         }
-        else -> PlaybackButtonVariant.PLAY
+        else ->
+            PlaybackButtonVariant.PLAY
     }
 
-    val action = actionForVariant(
-        variant,
-        player = playerViewModel.player,
-        playable,
-        resume = playableIsPlayerPlayable,
-    )
+    val action: () -> Unit = {
+        when (variant) {
+            PlaybackButtonVariant.LOADING -> {}
+            PlaybackButtonVariant.PAUSE -> playerViewModel.player.pause()
+            PlaybackButtonVariant.PLAY ->
+                if (playableIsPlayerPlayable) playerViewModel.player.play()
+                else playerViewModel.player.play(playable)
+            PlaybackButtonVariant.LOCKED ->
+                membersViewModel.handleRestrictedContentAccessAttempt()
+        }
+    }
 
     PlaybackButton(style, variant, modifier, action)
 }
@@ -141,6 +162,13 @@ fun PlaybackNewCircleButton(variant: PlaybackButtonVariant, modifier: Modifier, 
                     color = Color.Black,
                     modifier = Modifier.fillMaxSize(fraction = .45F)
                 )
+            PlaybackButtonVariant.LOCKED ->
+                Icon(
+                    painter = rememberVectorPainter(image = Icons.Filled.Lock),
+                    contentDescription = descriptionForVariant(variant),
+                    modifier = Modifier
+                        .fillMaxSize(fraction = .45F),
+                )
         }
     }
 
@@ -166,7 +194,8 @@ private fun PlaybackCircleButton(variant: PlaybackButtonVariant, modifier: Modif
     ) {
         when (variant) {
             PlaybackButtonVariant.PLAY,
-            PlaybackButtonVariant.PAUSE ->
+            PlaybackButtonVariant.PAUSE,
+            PlaybackButtonVariant.LOCKED ->
                 Icon(
                     imageVector = iconForVariant(variant),
                     contentDescription = descriptionForVariant(variant),
@@ -238,6 +267,16 @@ private fun PlaybackLiveButton(
                 )
                 Spacer(modifier = Modifier.fillMaxWidth(.04F))
             }
+            PlaybackButtonVariant.LOCKED -> {
+                Icon(
+                    painter = rememberVectorPainter(image = Icons.Filled.Lock),
+                    contentDescription = descriptionForVariant(variant),
+                    modifier = Modifier
+                        .fillMaxHeight(.45F)
+                        .aspectRatio(1F),
+                )
+                Spacer(modifier = Modifier.fillMaxWidth(.1F))
+            }
         }
         Text(
             maxLines = 1,
@@ -301,6 +340,13 @@ private fun PlaybackPlainButton(
                     modifier = Modifier
                         .fillMaxSize(.4F)
                 )
+            PlaybackButtonVariant.LOCKED ->
+                Icon(
+                    painter = rememberVectorPainter(image = Icons.Filled.Lock),
+                    contentDescription = descriptionForVariant(variant),
+                    modifier = Modifier
+                        .fillMaxSize(.4F),
+                )
         }
     }
 }
@@ -309,27 +355,14 @@ private fun iconForVariant(variant: PlaybackButtonVariant): ImageVector = when (
     PlaybackButtonVariant.PAUSE -> Icons.Filled.Pause
     PlaybackButtonVariant.PLAY -> Icons.Filled.PlayArrow
     PlaybackButtonVariant.LOADING -> Icons.Filled.Downloading
+    PlaybackButtonVariant.LOCKED -> Icons.Filled.Lock
 }
 
 private fun descriptionForVariant(variant: PlaybackButtonVariant): String = when (variant) {
     PlaybackButtonVariant.PAUSE -> "Pause"
     PlaybackButtonVariant.PLAY -> "Play"
     PlaybackButtonVariant.LOADING -> "Loading"
-}
-
-private fun actionForVariant(
-    variant: PlaybackButtonVariant,
-    player: Player,
-    playable: Playable,
-    resume: Boolean,
-): () -> Unit = when (variant) {
-    PlaybackButtonVariant.LOADING ->
-        ({})
-    PlaybackButtonVariant.PAUSE ->
-        ({ player.pause() })
-    PlaybackButtonVariant.PLAY ->
-        if (resume) ({ player.play() })
-        else ({ player.play(playable) })
+    PlaybackButtonVariant.LOCKED -> "Locked"
 }
 
 @Preview

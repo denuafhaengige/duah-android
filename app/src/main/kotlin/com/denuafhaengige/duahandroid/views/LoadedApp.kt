@@ -19,7 +19,6 @@ fun LoadedApp(viewModel: AppViewModel) {
 
 
     val liveChannel by viewModel.liveChannel.observeAsState()
-
     val navController = rememberNavController()
 
     Box(
@@ -30,6 +29,7 @@ fun LoadedApp(viewModel: AppViewModel) {
             modifier = Modifier.navigationBarsPadding(),
             topBar = {
                 DynamicLogoTopAppBar(
+                    membersViewModel = viewModel.membersViewModel,
                     playerViewModel = viewModel.playerViewModel,
                     liveChannel = liveChannel,
                     navController = navController,
@@ -46,16 +46,23 @@ fun LoadedApp(viewModel: AppViewModel) {
             },
             bottomBar = {
                 AnimatedTinyPlayer(
-                    model = TinyPlayerModel(playerViewModel = viewModel.playerViewModel)
+                    membersViewModel = viewModel.membersViewModel,
+                    playerViewModel = viewModel.playerViewModel,
                 )
             },
         )
         liveChannel?.let { liveChannel ->
             DynamicLargePlayer(
+                membersViewModel = viewModel.membersViewModel,
                 playerViewModel = viewModel.playerViewModel,
                 liveChannel = liveChannel,
                 broadcastFetcher = BroadcastFetcher(store = Application.contentProvider.contentStore)
             )
         }
+        DynamicMemberOverview(
+            settings = viewModel.settings,
+            membersViewModel = viewModel.membersViewModel,
+        )
+        NotMemberAlert(membersViewModel = viewModel.membersViewModel)
     }
 }

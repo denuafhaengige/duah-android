@@ -18,6 +18,8 @@ data class Broadcast(
     override val title: String,
     val broadcasted: Date? = null,
     override val description: String? = null,
+    @JsonContentAccessLevel
+    override val contentAccessLevel: ContentAccessLevel?,
     val hidden: Boolean = false,
     val duration: Int? = null,
     @Embedded(prefix = "square_image_file_")
@@ -33,7 +35,7 @@ data class Broadcast(
     @ColumnInfo(name = "program_id")
     @Json(name = "program")
     val programReference: EntityReference<Program>? = null,
-): Entity, Titled, Imaged, Described {
+): Entity, Titled, Imaged, Described, AccessControlled {
 
     companion object {
         val example
@@ -42,6 +44,7 @@ data class Broadcast(
                 broadcasted = Date(),
                 title = "En god udsendelse, som er værd at høre",
                 description = "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.",
+                contentAccessLevel = ContentAccessLevel.FREE,
                 hidden = false,
                 squareImageFile = File(
                     path = "",
@@ -117,7 +120,7 @@ data class BroadcastWithProgramAndEmployees(
         ),
     )
     val employees: List<Employee>,
-): Titled, MetaTitled, Imaged, Described, Entity {
+): Titled, MetaTitled, Imaged, Described, Entity, AccessControlled {
 
     override val id
         get() = broadcast.id
@@ -162,6 +165,10 @@ data class BroadcastWithProgramAndEmployees(
         get() =
             if (broadcast.duration != null) DurationFormatter.secondsToHoursMinutes(broadcast.duration)
             else null
+
+    override val contentAccessLevel: ContentAccessLevel?
+        get() =
+            broadcast.contentAccessLevel ?: program?.contentAccessLevel
 }
 
 class BroadcastFetcher(

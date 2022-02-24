@@ -55,6 +55,7 @@ fun DynamicBroadcastList(
             },
             broadcastVisualContent = { broadcast ->
                 DynamicBroadcastVisualPlayButton(
+                    membersViewModel = viewModel.membersViewModel,
                     playerViewModel = viewModel.playerViewModel,
                     broadcast = broadcast,
                 )

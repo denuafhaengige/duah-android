@@ -17,6 +17,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.denuafhaengige.duahandroid.R
+import com.denuafhaengige.duahandroid.members.MembersViewModel
 import com.denuafhaengige.duahandroid.player.PlayerViewModel
 import com.denuafhaengige.duahandroid.util.LivePlayableBroadcast
 import com.denuafhaengige.duahandroid.util.capitalizeWords
@@ -24,6 +25,7 @@ import com.denuafhaengige.duahandroid.util.capitalizeWords
 @Composable
 fun LatestBroadcasts(
     playableBroadcasts: List<LivePlayableBroadcast>,
+    membersViewModel: MembersViewModel,
     playerViewModel: PlayerViewModel,
     navController: NavController,
 ) {
@@ -49,7 +51,12 @@ fun LatestBroadcasts(
             contentPadding = PaddingValues(horizontal = 20.dp),
         ) {
             items(items = playableBroadcasts) { playableBroadcast ->
-                DynamicLatestBroadcastsItem(playableBroadcast, playerViewModel, navController)
+                DynamicLatestBroadcastsItem(
+                    playableBroadcast,
+                    membersViewModel,
+                    playerViewModel,
+                    navController
+                )
             }
         }
     }
@@ -58,6 +65,7 @@ fun LatestBroadcasts(
 @Composable
 fun DynamicLatestBroadcastsItem(
     livePlayableBroadcast: LivePlayableBroadcast,
+    membersViewModel: MembersViewModel,
     playerViewModel: PlayerViewModel,
     navController: NavController,
 ) {
@@ -83,6 +91,7 @@ fun DynamicLatestBroadcastsItem(
                 .size(ContentDimensions.squareBannerSize),
         ) {
             DynamicBroadcastVisualPlayButton(
+                membersViewModel = membersViewModel,
                 playerViewModel = playerViewModel,
                 broadcast = playableBroadcast.broadcast,
             )
