@@ -48,6 +48,8 @@ class ContentLoader(
         object Starting: State()
         object WaitingForConnection: State()
         object Connected: State()
+        class Configuring(val messageId: String): State()
+        object Configured: State()
         class Subscribing(val messageId: String): State()
         object Subscribed: State()
         class Synchronizing(val syncState: SyncState):State()
@@ -106,6 +108,7 @@ class ContentLoader(
         when (state.value) {
             is State.Starting -> onStarting()
             is State.Connected -> onConnected()
+            is State.Configured -> onConfigured()
             is State.Subscribed -> onSubscribed()
             is State.Synchronizing -> onSynchronizing()
             else -> return
@@ -127,6 +130,18 @@ class ContentLoader(
 
     private fun onConnected() {
         if (state.value !is State.Connected) {
+            return
+        }
+        val message = GraphCommandMessage(
+            id = UUID.randomUUID().toString(),
+            commandType = GraphCommandType.HANDLES_CONTENT_ACCESS_LEVEL,
+        )
+        _state.value = State.Configuring(messageId = message.id)
+        graphService.sendCommand(message)
+    }
+
+    private fun onConfigured() {
+        if (state.value !is State.Configured) {
             return
         }
         val message = GraphSubscriptionMessage(
@@ -304,6 +319,13 @@ class ContentLoader(
             }
             if (event is WebSocket.Event.OnConnectionFailed) {
                 _state.value = State.WaitingForConnection
+            }
+        })
+        disposables.add(graphService.receiveCommandResponse().subscribe { message ->
+            Log.debug("ContentLoader | receiveCommandResponse | commandResponseMessage: $message")
+            val configuringState = state.value as? State.Configuring ?: return@subscribe
+            if (configuringState.messageId == message.respondingToMessageId) {
+                _state.value = State.Configured
             }
         })
         disposables.add(graphService.receiveSubscriptionResponse().subscribe { subscriptionResponseMessage ->

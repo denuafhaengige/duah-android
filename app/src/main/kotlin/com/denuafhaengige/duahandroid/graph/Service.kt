@@ -30,6 +30,12 @@ interface GraphService {
 
     @Receive
     fun receiveRequestResponse(): Flowable<GraphRequestResponseMessage>
+
+    @Send
+    fun sendCommand(message: GraphCommandMessage)
+
+    @Receive
+    fun receiveCommandResponse(): Flowable<GraphCommandResponseMessage>
 }
 
 class GraphServiceFactory(private val okHttpClient: OkHttpClient, private val moshi: Moshi) {

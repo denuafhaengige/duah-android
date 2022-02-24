@@ -30,6 +30,8 @@ enum class GraphMessageType(val stringValue: String) {
     SUBSCRIPTION("subscription"),
     SUBSCRIPTION_RESPONSE("subscription_response"),
     SUBSCRIPTION_UPDATE("subscription_update"),
+    COMMAND("command"),
+    COMMAND_RESPONSE("command_response"),
 }
 
 // MARK: Adapters
@@ -101,6 +103,8 @@ class GraphMessageJsonAdapterFactory: JsonAdapter.Factory {
                 GraphMessageType.SUBSCRIPTION -> GraphSubscriptionMessage::class.java
                 GraphMessageType.SUBSCRIPTION_RESPONSE -> GraphSubscriptionResponseMessage::class.java
                 GraphMessageType.SUBSCRIPTION_UPDATE -> GraphSubscriptionUpdateMessage::class.java
+                GraphMessageType.COMMAND -> GraphCommandMessage::class.java
+                GraphMessageType.COMMAND_RESPONSE -> GraphCommandResponseMessage::class.java
             }
             if (targetType.rawType != messageClass) {
                 return null

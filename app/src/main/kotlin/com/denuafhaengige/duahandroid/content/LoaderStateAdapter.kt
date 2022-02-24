@@ -11,10 +11,10 @@ class ContentLoaderStateAdapter {
                     ContentProvider.State.WaitingForConnection
                 is ContentLoader.State.WaitingForConnection ->
                     ContentProvider.State.WaitingForConnection
-                is ContentLoader.State.Connected ->
-                    ContentProvider.State.Loading(state = ContentProvider.LoadingState.Subscribing)
-                is ContentLoader.State.Subscribing ->
-                    ContentProvider.State.Loading(state = ContentProvider.LoadingState.Subscribing)
+                is ContentLoader.State.Connected,
+                is ContentLoader.State.Configuring,
+                is ContentLoader.State.Configured,
+                is ContentLoader.State.Subscribing,
                 is ContentLoader.State.Subscribed ->
                     ContentProvider.State.Loading(state = ContentProvider.LoadingState.Subscribing)
                 is ContentLoader.State.Synchronizing -> {

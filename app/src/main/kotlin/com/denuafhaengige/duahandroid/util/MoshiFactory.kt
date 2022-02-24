@@ -30,6 +30,7 @@ class MoshiFactory {
                 .add(MemberSubscriptionChargeFrequencyAdapter())
                 .add(MemberSubscriptionTypeAdapter())
                 .add(ContentAccessLevelAdapter())
+                .add(GraphCommandTypeAdapter())
                 .add(KotlinJsonAdapterFactory())
                 .build()
         }

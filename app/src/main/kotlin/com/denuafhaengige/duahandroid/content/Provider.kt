@@ -100,26 +100,34 @@ class ContentProvider(context: Context) {
             }
         }
         scope.launch {
-            contentStore.eventFlow.collect { event ->
-                Log.debug("ContentProvider | contentStore.eventFlow.collect | event: $event")
-            }
+            contentStore.eventFlow
+                .filterIsInstance<ContentStore.Event.Loaded>()
+                .collect { event ->
+                    Log.debug("ContentProvider | state: ${state.value} | contentStore.eventFlow.collect | event: $event")
+                }
         }
         scope.launch {
             contentStore.eventFlow
-                .takeWhile { state.value is State.ReadyToServe }
                 .filterIsInstance<ContentStore.Event.Loaded>()
                 .flatMapMerge { it.operations.asFlow() }
                 .filterIsInstance<ContentStore.Operation.Upsert>()
                 .filter { it.id == featuredSettingId }
-                .collect { refreshFeaturedContent() }
+                .collect {
+                    if (state.value !is State.ReadyToServe) {
+                        return@collect
+                    }
+                    refreshFeaturedContent()
+                }
         }
         scope.launch {
             contentStore.eventFlow
-                .takeWhile { state.value is State.ReadyToServe }
                 .filterIsInstance<ContentStore.Event.Loaded>()
                 .flatMapMerge { it.operations.asFlow() }
                 .filter { it.entityType == EntityType.BROADCAST }
                 .collect {
+                    if (state.value !is State.ReadyToServe) {
+                        return@collect
+                    }
                     val latestBroadcastIds = latestBroadcasts.value.mapNotNull { value -> value.flow.value?.id }
                     when (it) {
                         is ContentStore.Operation.Delete -> {
@@ -128,24 +136,20 @@ class ContentProvider(context: Context) {
                             }
                         }
                         is ContentStore.Operation.Upsert -> {
-                            val mostRecentId = latestBroadcastIds.reduce { mostRecentId, id ->
-                                if (mostRecentId > id) mostRecentId
-                                else id
-                            }
-                            if (it.id > mostRecentId) {
-                                refreshLatestBroadcasts()
-                            }
+                            refreshLatestBroadcasts()
                         }
                     }
                 }
         }
         scope.launch {
             contentStore.eventFlow
-                .takeWhile { state.value is State.ReadyToServe }
                 .filterIsInstance<ContentStore.Event.Loaded>()
                 .flatMapMerge { it.operations.asFlow() }
                 .filter { it.entityType == EntityType.PROGRAM }
                 .collect {
+                    if (state.value !is State.ReadyToServe) {
+                        return@collect
+                    }
                     refreshPrograms()
                 }
         }
@@ -250,10 +254,11 @@ class ContentProvider(context: Context) {
         val channels =
             if (channelsIds.isNotEmpty()) contentStore.database.channelDao().loadAllByIds(channelsIds)
             else emptyList()
-        val featuredItems = items.map { item ->
+        val featuredItems = items.mapNotNull { item ->
             when (item.type) {
                 FeaturedSetting.ValueType.BROADCAST -> {
-                    val broadcast = broadcasts.first { it.broadcast.id == item.id}
+                    val broadcast = broadcasts
+                        .firstOrNull { it.broadcast.id == item.id } ?: return@mapNotNull null
                     FeaturedFlow(
                         featured = Featured.Broadcast(
                             entity = broadcast,
@@ -263,13 +268,16 @@ class ContentProvider(context: Context) {
                     )
                 }
                 FeaturedSetting.ValueType.PROGRAM -> {
+                    val program = programs
+                        .firstOrNull { it.id == item.id } ?: return@mapNotNull null
                     FeaturedFlow(
-                        featured = Featured.Program(entity = programs.first { it.id == item.id }),
+                        featured = Featured.Program(entity = program),
                         store = contentStore,
                     )
                 }
                 FeaturedSetting.ValueType.CHANNEL -> {
-                    val channel = channels.first { it.channel.id == item.id }
+                    val channel = channels
+                        .firstOrNull { it.channel.id == item.id } ?: return@mapNotNull null
                     FeaturedFlow(
                         featured = Featured.Channel(
                             entity = channel,

@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.denuafhaengige.duahandroid"
     android:versionCode="19"
-    android:versionName="1.0.8">
+    android:versionName="1.0.9">
 
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -21,10 +21,10 @@
 
         <meta-data
             android:name="data_version_reset_threshold"
-            android:value="1.0.8" />
-        <!--<meta-data
-            android:name="graph_endpoint"
-            android:value="ws://10.0.2.2:9996" />-->
+            android:value="1.0.9" />
+<!--        <meta-data-->
+<!--            android:name="graph_endpoint"-->
+<!--            android:value="ws://10.0.2.2:9996" />-->
         <meta-data
             android:name="graph_endpoint"
             android:value="wss://graph.denuafhaengige.dk" />
