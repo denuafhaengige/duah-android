@@ -34,7 +34,7 @@ fun FeaturedPager(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(365.dp),
+            .height(350.dp),
     ) {
         Box(
             contentAlignment = Alignment.BottomCenter,
@@ -93,18 +93,20 @@ fun FeaturedPagerItem(
     ) {
         when (featured) {
             is Featured.Broadcast ->
-                BroadcastVisual(
-                    broadcast = featured.entity,
-                    style = BroadcastVisualStyle.WIDE,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(ContentDimensions.wideBannerHeight),
-                ) {
-                    DynamicBroadcastVisualPlayButton(
-                        membersViewModel = membersViewModel,
-                        playerViewModel = playerViewModel,
+                BoxWithConstraints {
+                    BroadcastVisual(
                         broadcast = featured.entity,
-                    )
+                        style = BroadcastVisualStyle.WIDE,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(maxWidth/2),
+                    ) {
+                        DynamicBroadcastVisualPlayButton(
+                            membersViewModel = membersViewModel,
+                            playerViewModel = playerViewModel,
+                            broadcast = featured.entity,
+                        )
+                    }
                 }
             else -> {}
         }

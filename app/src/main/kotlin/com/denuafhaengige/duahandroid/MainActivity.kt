@@ -10,6 +10,7 @@ import com.denuafhaengige.duahandroid.theming.DuahTheme
 import com.denuafhaengige.duahandroid.util.Log
 import com.denuafhaengige.duahandroid.util.Settings
 import com.denuafhaengige.duahandroid.views.App
+import timber.log.Timber
 
 class MainActivity : ComponentActivity() {
 
@@ -39,22 +40,22 @@ class MainActivity : ComponentActivity() {
     }
 
     override fun onStart() {
-        Log.debug("MainActivity | onStart")
+        Timber.d("MainActivity | onStart")
         super.onStart()
     }
 
     override fun onPause() {
-        Log.debug("MainActivity | onPause")
+        Timber.d("MainActivity | onPause")
         super.onPause()
     }
 
     override fun onStop() {
-        Log.debug("MainActivity | onStop")
+        Timber.d("MainActivity | onStop")
         super.onStop()
     }
 
     override fun onDestroy() {
-        Log.debug("MainActivity | onDestroy")
+        Timber.d("MainActivity | onDestroy")
         super.onDestroy()
     }
 

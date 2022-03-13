@@ -17,6 +17,7 @@ import com.denuafhaengige.duahandroid.util.Settings
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.guava.await
+import timber.log.Timber
 import java.lang.ref.WeakReference
 import kotlin.properties.Delegates
 import androidx.media3.common.Player.Listener as PlayerListener
@@ -63,7 +64,7 @@ class Player (private val context: Context, private val settings: Settings) {
     // MARK: Props
 
     private var innerState: InnerState by Delegates.observable(InnerState.Idle) { _, oldValue, newValue ->
-        Log.debug("Player | innerState | oldValue: $oldValue, newValue: $newValue")
+        Timber.d("Player | innerState | oldValue: $oldValue, newValue: $newValue")
         if (oldValue == newValue) {
             return@observable
         }
@@ -85,7 +86,7 @@ class Player (private val context: Context, private val settings: Settings) {
     }
 
     private var observePosition: Boolean by Delegates.observable(false) { _, oldValue, newValue ->
-        Log.debug("Player | observePosition | oldValue: $oldValue, newValue: $newValue")
+        Timber.d("Player | observePosition | oldValue: $oldValue, newValue: $newValue")
         if (oldValue == newValue) {
             return@observable
         }
@@ -151,7 +152,7 @@ class Player (private val context: Context, private val settings: Settings) {
         innerState = InnerState.StartingPlayback()
         val mediaControllerPlaybackState =
             Media3Integration.stringForPlaybackState(mediaController.playbackState)
-        Log.debug("Player | innerPlay | mediaController.state: $mediaControllerPlaybackState")
+        Timber.d("Player | innerPlay | mediaController.state: $mediaControllerPlaybackState")
         if (mediaController.playbackState == STATE_READY) {
             mediaController.play()
         } else {
@@ -192,7 +193,7 @@ class Player (private val context: Context, private val settings: Settings) {
 
         override fun onDisconnected(controller: MediaController) {
             super.onDisconnected(controller)
-            Log.debug("Player | onDisconnected")
+            Timber.d("Player | onDisconnected")
             _connected.value = false
         }
     }
@@ -215,12 +216,13 @@ class Player (private val context: Context, private val settings: Settings) {
         override fun onPlaybackStateChanged(playbackState: Int) {
             super.onPlaybackStateChanged(playbackState)
             val playbackStateString = Media3Integration.stringForPlaybackState(playbackState)
-            Log.debug("PlayerService | onPlaybackStateChanged: $playbackStateString")
+            Timber.d("PlayerService | onPlaybackStateChanged | state $playbackStateString, innerState: $innerState")
             innerState.let { atomicInnerState ->
                 when {
                     playbackState == STATE_READY &&
                     atomicInnerState is InnerState.Seeking &&
                     !atomicInnerState.playImmediately -> {
+                        Timber.d("paused")
                         _position.value = mediaController.currentPosition
                         innerState = InnerState.Paused
                     }
@@ -228,24 +230,33 @@ class Player (private val context: Context, private val settings: Settings) {
                     atomicInnerState is InnerState.StartingPlayback &&
                     stream.value?.type == StreamType.HLS_EVENT &&
                     mediaController.currentPosition != (0).toLong() -> {
+                        Timber.d("mediaController.seekTo(0)")
                         mediaController.seekTo(0)
                     }
                     playbackState == STATE_READY &&
                     atomicInnerState is InnerState.StartingPlayback -> {
+                        Timber.d("mediaController.play()")
                         mediaController.play()
                     }
+                    playbackState == STATE_IDLE &&
+                    atomicInnerState is InnerState.StartingPlayback -> {
+                        Timber.d("mediaController.prepare()")
+                        mediaController.prepare()
+                    }
+                    else ->
+                        Timber.d("Unhandled situation")
                 }
             }
         }
 
         override fun onIsLoadingChanged(isLoading: Boolean) {
             super.onIsLoadingChanged(isLoading)
-            Log.debug("PlayerService | onIsLoadingChanged: $isLoading")
+            Timber.d("PlayerService | onIsLoadingChanged: $isLoading")
         }
 
         override fun onIsPlayingChanged(isPlaying: Boolean) {
             super.onIsPlayingChanged(isPlaying)
-            Log.debug("PlayerService | onIsPlayingChanged: $isPlaying")
+            Timber.d("PlayerService | onIsPlayingChanged: $isPlaying")
             if (isPlaying) {
                 _position.value = mediaController.currentPosition
                 observePosition = true
@@ -266,18 +277,18 @@ class Player (private val context: Context, private val settings: Settings) {
 
         override fun onPlayerError(error: PlaybackException) {
             super.onPlayerError(error)
-            Log.debug("PlayerService | onPlayerError: $error")
+            Timber.d("PlayerService | onPlayerError: $error")
         }
 
         override fun onPlayerErrorChanged(error: PlaybackException?) {
             super.onPlayerErrorChanged(error)
-            Log.debug("PlayerService | onPlayerErrorChanged: $error")
+            Timber.d("PlayerService | onPlayerErrorChanged: $error")
         }
 
         override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
             super.onMediaItemTransition(mediaItem, reason)
             val stringValue = Media3Integration.stringForMediaItemTransitionReason(reason)
-            Log.debug("PlayerService | onMediaItemTransition: $mediaItem, reason: $stringValue")
+            Timber.d("PlayerService | onMediaItemTransition: $mediaItem, reason: $stringValue")
         }
 
         override fun onTimelineChanged(timeline: Timeline, reason: Int) {
@@ -292,7 +303,7 @@ class Player (private val context: Context, private val settings: Settings) {
                 _duration.value = duration
                 _position.value = position
             }
-            Log.debug("PlayerService | onTimelineChanged: $timeline, reason: $reasonString, duration: $duration, position: $position")
+            Timber.d("PlayerService | onTimelineChanged: $timeline, reason: $reasonString, duration: $duration, position: $position")
         }
     }
 

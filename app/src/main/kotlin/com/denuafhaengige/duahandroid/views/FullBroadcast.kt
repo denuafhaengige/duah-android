@@ -81,14 +81,16 @@ fun FullBroadcast(
             .background(MaterialTheme.colors.background)
             .verticalScroll(scrollState),
     ) {
-        BroadcastVisual(
-            broadcast = broadcast,
-            style = BroadcastVisualStyle.WIDE,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(ContentDimensions.wideBannerHeight),
-        ) {
-            topVisualContent()
+        BoxWithConstraints {
+            BroadcastVisual(
+                broadcast = broadcast,
+                style = BroadcastVisualStyle.WIDE,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(maxWidth/2),
+            ) {
+                topVisualContent()
+            }
         }
         Column(
             modifier = Modifier

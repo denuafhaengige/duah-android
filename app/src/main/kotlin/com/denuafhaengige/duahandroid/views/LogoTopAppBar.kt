@@ -71,11 +71,13 @@ fun LogoTopAppBar(
         if (isSystemInDarkTheme()) painterResource(id = R.drawable.round_icon_black_on_white)
         else painterResource(id = R.drawable.round_icon_white_on_black)
 
+    val topAppBarHeight = 50.dp
+
     Column {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .statusBarsHeight()
+                .statusBarsHeight(additional = 10.dp)
                 .background(color = appBarBackgroundColor()),
         )
         Box(
@@ -84,6 +86,9 @@ fun LogoTopAppBar(
             TopAppBar(
                 backgroundColor = appBarBackgroundColor(),
                 contentPadding = PaddingValues(0.dp),
+                elevation = 0.dp,
+                modifier = Modifier
+                    .height(topAppBarHeight),
             ) {
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -102,7 +107,7 @@ fun LogoTopAppBar(
                 painter = logoPainter,
                 contentDescription = null, // decorative element
                 modifier = Modifier
-                    .size(56.dp)
+                    .size(topAppBarHeight)
                     .scale(1.15F)
                     .align(alignment = Alignment.Center)
             )

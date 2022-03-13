@@ -27,6 +27,7 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.guava.asListenableFuture
+import timber.log.Timber
 import java.lang.ref.WeakReference
 
 @androidx.annotation.OptIn(UnstableApi::class)
@@ -43,16 +44,16 @@ class PlayerService: Player.Listener, MediaLibraryService() {
     // MARK: Service
 
     override fun onCreate() {
-        Log.debug("PlayerService | onCreate")
+        Timber.d("PlayerService | onCreate")
         super.onCreate()
         settings = Settings(context = applicationContext)
         wireMediaSession()
-        Log.debug("PlayerService | onCreate | media session token: ${mediaSession.token}")
+        Timber.d("PlayerService | onCreate | media session token: ${mediaSession.token}")
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        Log.debug("PlayerService | onDestroy")
+        Timber.d("PlayerService | onDestroy")
         exoPlayer.release()
         mediaSession.release()
     }
@@ -60,6 +61,7 @@ class PlayerService: Player.Listener, MediaLibraryService() {
     // MARK: MediaLibraryService
 
     override fun onGetSession(controllerInfo: MediaSession.ControllerInfo): MediaLibrarySession {
+        Timber.d("PlayerService | onGetSession")
         return mediaSession
     }
 
@@ -72,6 +74,7 @@ class PlayerService: Player.Listener, MediaLibraryService() {
             browser: MediaSession.ControllerInfo,
             mediaId: String
         ): ListenableFuture<LibraryResult<MediaItem>> {
+            Timber.d("PlayerService | onGetItem")
             return scope.async {
                 val mediaItem = mediaItemForMediaId(mediaId)
                     if (mediaItem != null) LibraryResult.ofItem(mediaItem, null)
@@ -87,6 +90,7 @@ class PlayerService: Player.Listener, MediaLibraryService() {
             controller: MediaSession.ControllerInfo,
             mediaItem: MediaItem
         ): MediaItem {
+            Timber.d("PlayerService | fillInLocalConfiguration")
             return runBlocking { mediaItemForMediaId(mediaItem.mediaId) }
                 ?: return super.fillInLocalConfiguration(session, controller, mediaItem)
         }
@@ -106,6 +110,7 @@ class PlayerService: Player.Listener, MediaLibraryService() {
 
     @androidx.annotation.OptIn(UnstableApi::class)
     private fun wireMediaSession() {
+        Timber.d("PlayerService | wireMediaSession")
         val renderersFactory = DefaultRenderersFactory(this)
             // TODO: Figure out why this causes playback not to work on some devices
             //.setEnableAudioOffload(true)

@@ -34,7 +34,6 @@ import com.denuafhaengige.duahandroid.theming.VeryLighterGrey
 import com.denuafhaengige.duahandroid.util.capitalizeWords
 
 object ContentDimensions {
-    val wideBannerHeight = 200.dp
     val squareBannerSize = 150.dp
     val contentRowVerticalPadding = 30.dp
 }

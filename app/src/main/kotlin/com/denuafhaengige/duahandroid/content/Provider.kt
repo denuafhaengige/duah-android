@@ -16,6 +16,7 @@ import com.denuafhaengige.duahandroid.util.Settings
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import okhttp3.OkHttpClient
+import timber.log.Timber
 import java.util.*
 
 class ContentProvider(context: Context) {
@@ -74,7 +75,7 @@ class ContentProvider(context: Context) {
     // MARK: Service
 
     init {
-        Log.debug("ContentProvider | onCreate")
+        Timber.d("ContentProvider | onCreate")
         mutableInstance.value = this
         contentStore = ContentStore(context = context)
         contentLoader = ContentLoader(
@@ -92,7 +93,7 @@ class ContentProvider(context: Context) {
     private suspend fun wireContentStore() {
         scope.launch {
             contentStore.state.collect { contentStoreState ->
-                Log.debug("ContentProvider | contentStore.state.collect | state: $contentStoreState")
+                Timber.d("ContentProvider | contentStore.state.collect | state: $contentStoreState")
                 when (contentStoreState) {
                     ContentStore.State.READY -> contentStoreReady()
                     else -> return@collect
@@ -103,7 +104,7 @@ class ContentProvider(context: Context) {
             contentStore.eventFlow
                 .filterIsInstance<ContentStore.Event.Loaded>()
                 .collect { event ->
-                    Log.debug("ContentProvider | state: ${state.value} | contentStore.eventFlow.collect | event: $event")
+                    Timber.d("ContentProvider | state: ${state.value} | contentStore.eventFlow.collect | event: $event")
                 }
         }
         scope.launch {
@@ -158,7 +159,7 @@ class ContentProvider(context: Context) {
     private suspend fun wireContentLoader() {
         scope.launch {
             contentLoader.state.collect { contentLoaderState ->
-                Log.debug("ContentProvider | contentLoader.state.collect | state: $contentLoaderState")
+                Timber.d("ContentProvider | contentLoader.state.collect | state: $contentLoaderState")
                 if (_state.value in listOf(State.PreparingContent, State.ReadyToServe)) {
                     return@collect
                 }
@@ -194,8 +195,8 @@ class ContentProvider(context: Context) {
         try {
             contentStore.start()
         } catch (e: Throwable) {
-            Log.debug("ContentProvider | start | failed starting database with exception: $e")
-            Log.debug("ContentProvider | start | resetting, then retrying")
+            Timber.d("ContentProvider | start | failed starting database with exception: $e")
+            Timber.d("ContentProvider | start | resetting, then retrying")
             resetDatabase()
             contentStore.start()
         }

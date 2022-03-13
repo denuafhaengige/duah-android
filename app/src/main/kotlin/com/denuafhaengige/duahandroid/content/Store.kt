@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class ContentStore(val context: Context) {
 
@@ -57,7 +58,7 @@ class ContentStore(val context: Context) {
     // MARK: Public Interface
 
     fun resetDatabase() = scope.launch {
-        Log.debug("ContentLoader | resetDatabase")
+        Timber.d("ContentLoader | resetDatabase")
         context.deleteDatabase(databaseName)
     }
 

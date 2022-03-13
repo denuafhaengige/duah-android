@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
 import okhttp3.OkHttpClient
+import timber.log.Timber
 import java.util.*
 
 class ContentLoader(
@@ -116,14 +117,14 @@ class ContentLoader(
     }
 
     private fun onStarting() {
-        Log.debug("ContentLoader | onStarting()")
+        Timber.d("ContentLoader | onStarting()")
         if (!this::graphService.isInitialized) {
-            Log.debug("ContentLoader | onStarting() | initializing GraphService")
+            Timber.d("ContentLoader | onStarting() | initializing GraphService")
             graphService = GraphServiceFactory(okHttpClient = okHttpClient, moshi = moshi)
                 .createService(settings.graphEndpoint, lifecycle)
             wireGraphService()
         }
-        Log.debug("ContentLoader | onStarting() | starting GraphService")
+        Timber.d("ContentLoader | onStarting() | starting GraphService")
         _state.value = State.WaitingForConnection
         lifecycle.onNext(Lifecycle.State.Started)
     }
@@ -313,7 +314,7 @@ class ContentLoader(
 
     private fun wireGraphService() {
         disposables.add(graphService.observeWebSocketEvent().subscribe { event ->
-            Log.debug("ContentLoader | observeWebSocketEvent | event: $event")
+            Timber.d("ContentLoader | observeWebSocketEvent | event: ${event::class}")
             if (event is WebSocket.Event.OnConnectionOpened<*>) {
                 _state.value = State.Connected
             }
@@ -322,20 +323,20 @@ class ContentLoader(
             }
         })
         disposables.add(graphService.receiveCommandResponse().subscribe { message ->
-            Log.debug("ContentLoader | receiveCommandResponse | commandResponseMessage: $message")
+            Timber.d("ContentLoader | receiveCommandResponse | commandResponseMessage: $message")
             val configuringState = state.value as? State.Configuring ?: return@subscribe
             if (configuringState.messageId == message.respondingToMessageId) {
                 _state.value = State.Configured
             }
         })
         disposables.add(graphService.receiveSubscriptionResponse().subscribe { subscriptionResponseMessage ->
-            Log.debug("ContentLoader | receiveSubscriptionResponse | subscriptionResponseMessage: $subscriptionResponseMessage")
+            Timber.d("ContentLoader | receiveSubscriptionResponse | subscriptionResponseMessage: $subscriptionResponseMessage")
             if ((state.value as? State.Subscribing)?.messageId == subscriptionResponseMessage.respondingToMessageId) {
                 _state.value = State.Subscribed
             }
         })
         disposables.add(graphService.receiveSubscriptionUpdate().subscribe { message ->
-            Log.debug("ContentLoader | receiveSubscriptionUpdate | subscriptionUpdateMessage: $message")
+            Timber.d("ContentLoader | receiveSubscriptionUpdate | subscriptionUpdateMessage: $message")
             scope.launch {
                 storeEntities(
                     entityType = message.payload.entityType,
@@ -346,7 +347,7 @@ class ContentLoader(
             }
         })
         disposables.add(graphService.receiveRequestResponse().subscribe { requestResponseMessage ->
-            Log.debug("ContentLoader | receiveRequestResponse | requestResponseMessage: ${requestResponseMessage.id}")
+            Timber.d("ContentLoader | receiveRequestResponse | requestResponseMessage: ${requestResponseMessage.id}")
             val syncState = (state.value as? State.Synchronizing)?.syncState ?: return@subscribe
             val entityType = (syncState as? SyncState.AwaitResponse)?.entityType ?: return@subscribe
             val message = (syncState as? SyncState.AwaitResponse)?.message ?: return@subscribe

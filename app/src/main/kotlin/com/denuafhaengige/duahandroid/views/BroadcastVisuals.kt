@@ -132,14 +132,13 @@ fun BroadcastVisual(
 @Preview
 @Composable
 private fun BroadcastVisualWidePreview() {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(ContentDimensions.wideBannerHeight),
-    ) {
+    BoxWithConstraints {
         BroadcastVisual(
             broadcast = BroadcastWithProgramAndEmployees.example,
             style = BroadcastVisualStyle.WIDE,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(maxWidth/2)
         ) {
             BroadcastVisualPlayButton { verticalPadding, horizontalPadding, diameter ->
                 PlaybackButton(

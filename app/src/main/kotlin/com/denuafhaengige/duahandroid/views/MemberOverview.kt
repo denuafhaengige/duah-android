@@ -34,6 +34,7 @@ import com.denuafhaengige.duahandroid.theming.RedColor
 import com.denuafhaengige.duahandroid.util.DateFormat
 import com.denuafhaengige.duahandroid.util.Log
 import com.denuafhaengige.duahandroid.util.Settings
+import timber.log.Timber
 import java.util.*
 
 
@@ -62,7 +63,7 @@ fun DynamicMemberOverview(
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 startActivity(context, intent, null)
             } catch (e: Throwable) {
-                Log.debug("DynamicMemberOverview | navigateToSubscribeAction | error: $e")
+                Timber.d("DynamicMemberOverview | navigateToSubscribeAction | error: $e")
             }
         },
     )

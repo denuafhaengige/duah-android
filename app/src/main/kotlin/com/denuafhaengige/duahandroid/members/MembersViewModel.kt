@@ -28,6 +28,7 @@ import okhttp3.Call
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
+import timber.log.Timber
 import java.io.IOException
 import java.lang.reflect.Member
 import java.net.URL
@@ -120,7 +121,7 @@ class MembersViewModel(settings: Settings) {
             activityLifecycle.flow
                 .filterIsInstance<ActivityLifecycle.Event.Resumed>()
                 .collect {
-                    Log.debug("MembersViewModel | activityLifecycle.flow.collect: $it")
+                    Timber.d("MembersViewModel | activityLifecycle.flow.collect: $it")
                     refreshIgnoringCache(false)
                 }
         }
@@ -153,9 +154,9 @@ class MembersViewModel(settings: Settings) {
             withContext(mainScope.coroutineContext) {
                 showMemberOverview.value = true
             }
-            Log.debug("MembersViewModel | login | success")
+            Timber.d("MembersViewModel | login | success")
         } catch (e: Throwable) {
-            Log.debug("MembersViewModel | login | error: $e")
+            Timber.d("MembersViewModel | login | error: $e")
             clear()
         }
     }
@@ -181,9 +182,9 @@ class MembersViewModel(settings: Settings) {
             withContext(mainScope.coroutineContext) {
                 showMemberOverview.value = false
             }
-            Log.debug("MembersViewModel | logout | success")
+            Timber.d("MembersViewModel | logout | success")
         } catch (e: Throwable) {
-            Log.debug("MembersViewModel | logout | error: $e")
+            Timber.d("MembersViewModel | logout | error: $e")
         } finally {
             clear()
         }
@@ -204,7 +205,7 @@ class MembersViewModel(settings: Settings) {
     // MARK: Implementation
 
     private suspend fun refreshIgnoringCache(ignoreCache: Boolean) {
-        Log.debug("MemberViewModel | refreshIgnoringCache: $ignoreCache")
+        Timber.d("MemberViewModel | refreshIgnoringCache: $ignoreCache")
         refreshAuthState()
         refreshSubscriptionsIgnoringCache(ignoreCache)
     }
@@ -213,7 +214,7 @@ class MembersViewModel(settings: Settings) {
         val credentials = prefs.credentials
         val refreshToken = prefs.refreshToken
         if (credentials == null || refreshToken == null) {
-            Log.debug("MemberViewModel | refreshAuthState | no credentials found, await user sanctioned login")
+            Timber.d("MemberViewModel | refreshAuthState | no credentials found, await user sanctioned login")
             clear()
             return
         }
@@ -232,13 +233,13 @@ class MembersViewModel(settings: Settings) {
         }
         if (saveToPrefs) {
             prefs.credentials = credentials
-            credentials.refreshToken.let { newRefreshToken ->
+            credentials.refreshToken?.let { newRefreshToken ->
                 prefs.refreshToken = newRefreshToken
             }
         }
         val profile = MemberProfile(email)
         this.credentials = credentials
-        credentials.refreshToken.let { newRefreshToken ->
+        credentials.refreshToken?.let { newRefreshToken ->
             this.refreshToken = newRefreshToken
         }
         withContext(mainScope.coroutineContext) {
@@ -251,17 +252,17 @@ class MembersViewModel(settings: Settings) {
             val credentials = this.credentials ?: return
             val now = Date()
             if (credentials.expiresAt.time - now.time > 1000*60*60*12) {
-                Log.debug("MemberViewModel | renewCredentialsIfAppropriate | more than 12 hours")
-                Log.debug("MemberViewModel | renewCredentialsIfAppropriate | expiresAt: ${credentials.expiresAt}")
+                Timber.d("MemberViewModel | renewCredentialsIfAppropriate | more than 12 hours")
+                Timber.d("MemberViewModel | renewCredentialsIfAppropriate | expiresAt: ${credentials.expiresAt}")
                 return
             }
             val refreshToken = this.refreshToken
             if (refreshToken == null) {
                 if (credentials.expiresAt < now) {
-                    Log.debug("MemberViewModel | renewCredentialsIfAppropriate | credentials expired, no refreshToken found")
+                    Timber.d("MemberViewModel | renewCredentialsIfAppropriate | credentials expired, no refreshToken found")
                     clear()
                 }
-                Log.debug("MemberViewModel | renewCredentialsIfAppropriate | no refreshToken found")
+                Timber.d("MemberViewModel | renewCredentialsIfAppropriate | no refreshToken found")
                 return
             }
             val newCredentials = suspendCoroutine<Credentials> { cont ->
@@ -276,10 +277,10 @@ class MembersViewModel(settings: Settings) {
                         }
                     })
             }
-            Log.debug("MemberViewModel | renewCredentialsIfAppropriate | renewed")
+            Timber.d("MemberViewModel | renewCredentialsIfAppropriate | renewed")
             handleCredentials(newCredentials, saveToPrefs = true)
         } catch (e: Throwable) {
-            Log.debug("MemberViewModel | renewCredentialsIfAppropriate | error: $e")
+            Timber.d("MemberViewModel | renewCredentialsIfAppropriate | error: $e")
             clear()
         }
     }
@@ -299,13 +300,13 @@ class MembersViewModel(settings: Settings) {
                 refreshSubscriptionsByFetchingWithCredentials(credentials)
             }
         } catch (e: Throwable) {
-            Log.debug("MemberViewModel | refreshSubscriptionsIgnoringCache | error: $e")
+            Timber.d("MemberViewModel | refreshSubscriptionsIgnoringCache | error: $e")
         }
     }
 
     private suspend fun refreshSubscriptionsByFetchingWithCredentials(credentials: Credentials) {
         try {
-            Log.debug("MemberViewModel | refreshSubscriptionsByFetchingWithCredentials")
+            Timber.d("MemberViewModel | refreshSubscriptionsByFetchingWithCredentials")
             withContext(mainScope.coroutineContext) {
                 _subscriptionsLoading.value = true
             }
@@ -329,13 +330,13 @@ class MembersViewModel(settings: Settings) {
             }
             val body = response.body?.string()
             if (response.code != 200 || body == null) {
-                Log.debug("MemberViewModel | refreshSubscriptionsByFetchingWithCredentials | response.code: ${response.code}, response.body: $body")
+                Timber.d("MemberViewModel | refreshSubscriptionsByFetchingWithCredentials | response.code: ${response.code}, response.body: $body")
                 clear()
                 return
             }
             val loadedSubscriptions = moshi.memberSubscriptionListAdapter.fromJson(body)
             if (loadedSubscriptions == null) {
-                Log.debug("MemberViewModel | refreshSubscriptionsByFetchingWithCredentials | failed deserializing body: $body")
+                Timber.d("MemberViewModel | refreshSubscriptionsByFetchingWithCredentials | failed deserializing body: $body")
                 return
             }
             prefs.subscriptions = loadedSubscriptions
@@ -343,7 +344,7 @@ class MembersViewModel(settings: Settings) {
                 _subscriptions.value = loadedSubscriptions
             }
         } catch (e: Throwable) {
-            Log.debug("MemberViewModel | refreshSubscriptionsByFetchingWithCredentials | error: $e")
+            Timber.d("MemberViewModel | refreshSubscriptionsByFetchingWithCredentials | error: $e")
         } finally {
             withContext(mainScope.coroutineContext) {
                 _subscriptionsLoading.value = false

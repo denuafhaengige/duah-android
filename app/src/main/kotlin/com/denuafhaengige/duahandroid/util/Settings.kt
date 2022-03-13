@@ -15,6 +15,7 @@ import android.content.pm.PackageInfo
 
 import android.content.pm.PackageManager.GET_META_DATA
 import android.net.Uri
+import timber.log.Timber
 
 class Settings(context: Context) {
 
@@ -117,7 +118,7 @@ class Settings(context: Context) {
         return try {
             Version(string, true)
         } catch (e: Throwable) {
-            Log.debug("Settings | versionForKey | exception while parsing value: $string, exception: $e")
+            Timber.d("Settings | versionForKey | exception while parsing value: $string, exception: $e")
             null
         }
     }

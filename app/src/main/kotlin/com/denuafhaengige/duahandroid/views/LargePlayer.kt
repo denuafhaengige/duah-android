@@ -41,6 +41,7 @@ import com.denuafhaengige.duahandroid.util.DurationFormatter
 import com.denuafhaengige.duahandroid.util.LiveEntity
 import com.denuafhaengige.duahandroid.util.Log
 import com.google.accompanist.insets.statusBarsPadding
+import timber.log.Timber
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -285,7 +286,7 @@ fun DynamicLargePlayerSeekControl(playerViewModel: PlayerViewModel, liveChannel:
     }} == true
 
     LaunchedEffect(observedPlayerState) {
-        Log.debug("DynamicLargePlayerSeekControl | LaunchedEffect | observedPlayerState: $observedPlayerState")
+        Timber.d("DynamicLargePlayerSeekControl | LaunchedEffect | observedPlayerState: $observedPlayerState")
         observedPlayerState?.let {
             if (it !is Player.State.Loading) {
                 seekTarget = null
