@@ -3,8 +3,6 @@ package com.denuafhaengige.duahandroid.members
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.core.content.edit
-import androidx.security.crypto.EncryptedSharedPreferences
-import androidx.security.crypto.MasterKeys
 import com.auth0.android.result.Credentials
 import com.denuafhaengige.duahandroid.Application
 import com.squareup.moshi.Types
@@ -12,7 +10,7 @@ import com.squareup.moshi.Types
 class MemberPrefs(applicationContext: Context) {
 
     companion object {
-        private const val prefsFileName = "member_prefs"
+        private const val prefsFileName = "com.denuafhaengige.duahandroid.member_prefs"
         private const val keyCredentials = "credentials"
         private const val keyRefreshToken = "refresh_token"
         private const val keySubscriptions = "subscriptions"
@@ -68,14 +66,6 @@ class MemberPrefs(applicationContext: Context) {
     private val moshi = Application.moshi
 
     init {
-        val keyGenParameterSpec = MasterKeys.AES256_GCM_SPEC
-        val mainKeyAlias = MasterKeys.getOrCreate(keyGenParameterSpec)
-        prefs = EncryptedSharedPreferences.create(
-            prefsFileName,
-            mainKeyAlias,
-            applicationContext,
-            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
-        )
+        prefs = applicationContext.getSharedPreferences(prefsFileName, Context.MODE_PRIVATE)
     }
 }

@@ -1,14 +1,10 @@
 package com.denuafhaengige.duahandroid.members
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.net.Uri
-import androidx.core.content.edit
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.security.crypto.EncryptedSharedPreferences
-import androidx.security.crypto.MasterKeys
 import com.auth0.android.Auth0
 import com.auth0.android.authentication.AuthenticationAPIClient
 import com.auth0.android.authentication.AuthenticationException
@@ -18,7 +14,6 @@ import com.auth0.android.provider.WebAuthProvider
 import com.auth0.android.result.Credentials
 import com.denuafhaengige.duahandroid.ActivityLifecycle
 import com.denuafhaengige.duahandroid.Application
-import com.denuafhaengige.duahandroid.util.Log
 import com.denuafhaengige.duahandroid.util.Settings
 import com.denuafhaengige.duahandroid.util.memberSubscriptionListAdapter
 import com.squareup.moshi.Moshi
@@ -30,8 +25,6 @@ import okhttp3.Request
 import okhttp3.Response
 import timber.log.Timber
 import java.io.IOException
-import java.lang.reflect.Member
-import java.net.URL
 import java.util.*
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException

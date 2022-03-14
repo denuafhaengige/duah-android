@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.denuafhaengige.duahandroid"
-    android:versionCode="22"
-    android:versionName="1.0.11">
+    android:versionCode="23"
+    android:versionName="1.0.12">
 
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -16,8 +16,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DenUafhængige"
         android:networkSecurityConfig="@xml/network_security_config"
-        android:fullBackupContent="false"
-        android:allowBackup="false">
+        android:fullBackupContent="true"
+        android:allowBackup="true">
 
         <meta-data
             android:name="data_version_reset_threshold"
